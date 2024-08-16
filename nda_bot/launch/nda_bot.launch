@@ -1,0 +1,15 @@
+<launch>
+
+  <node name="serial_node" pkg="rosserial_python" type="serial_node.py">
+    <param name="port" value="/dev/ttyUSB0" />
+    <param name="baud" value="57600" />
+  </node>
+
+  <node pkg="nda_bot" type="calculate_odometry.py" name="calculate_odometry"></node>
+
+  <node pkg="tf" type="static_transform_publisher" name="nda_bot_transform"
+    args="0 0 0 0 0 0 /map /odom 100" />
+
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find nda_bot)/rviz/nda_bot.rviz"></node>
+
+</launch>
