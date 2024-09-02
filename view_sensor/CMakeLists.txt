@@ -8,6 +8,9 @@ project(view_sensor)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED)
+find_package(realsense2_camera REQUIRED) 
+find_package(rtabmap_ros REQUIRED)
+find_package(imu_filter_madgwick REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)

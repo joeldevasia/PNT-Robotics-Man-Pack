@@ -28,6 +28,8 @@ ticks_per_rev = 266
 speed_multiplier = 20
 
 gps_received = Bool()
+gps_received.data = False
+
 initial_lat = 0
 initial_lon = 0
 
@@ -61,12 +63,12 @@ def magnetometer_callback(msg):
 
 def gps_callback(msg):
     global gps_received
-    if gps_received.data == False:
-        global initial_lat, initial_lon
-        if msg.latitude != 0 and msg.longitude != 0:
-            initial_lat = msg.latitude
-            initial_lon = msg.longitude
-            gps_received.data = True
+    # if gps_received.data == False:
+    global initial_lat, initial_lon
+    # if msg.latitude != 0 and msg.longitude != 0:
+    initial_lat = msg.latitude
+    initial_lon = msg.longitude
+    gps_received.data = True
 
 
 def main():
@@ -86,71 +88,72 @@ def main():
     navsat = NavSatFix()
 
     # global gps_received
-
-    if gps_received.data == True:
+    while gps_received.data == False:
+        print("gps_received: ", gps_received.data)
+        rospy.sleep(1)
+        # gps_sub.unregister()
+    while not rospy.is_shutdown():
         gps_sub.unregister()
-        while not rospy.is_shutdown():
+        theta = euler_from_quaternion(
+            [
+                magnetic_direction.orientation.x,
+                magnetic_direction.orientation.y,
+                magnetic_direction.orientation.z,
+                magnetic_direction.orientation.w,
+            ]
+        )[2]
+        # rospy.loginfo(magnetic_direction.orientation)
 
-            theta = euler_from_quaternion(
-                [
-                    magnetic_direction.orientation.x,
-                    magnetic_direction.orientation.y,
-                    magnetic_direction.orientation.z,
-                    magnetic_direction.orientation.w,
-                ]
-            )[2]
-            # rospy.loginfo(magnetic_direction.orientation)
+        # convert velocities from cmd_vel topic to odometry
+        v_wx = ((2*pi*wheel_radius)/ticks_per_rev)*(current_encoder_val-previous_encoder_val) * cos(theta)
+        v_wy = ((2*pi*wheel_radius)/ticks_per_rev)*(current_encoder_val-previous_encoder_val) * sin(theta)
 
-            # convert velocities from cmd_vel topic to odometry
-            v_wx = ((2*pi*wheel_radius)/ticks_per_rev)*(current_encoder_val-previous_encoder_val) * cos(theta)
-            v_wy = ((2*pi*wheel_radius)/ticks_per_rev)*(current_encoder_val-previous_encoder_val) * sin(theta)
+        odom.header.frame_id = "odom"
 
-            odom.header.frame_id = "odom"
+        odom.pose.pose.position.x += v_wx*dt*speed_multiplier
+        odom.pose.pose.position.y += v_wy*dt*speed_multiplier
+        # quaternion = quaternion_from_euler(0, 0, theta)
+        # odom.pose.pose.orientation.x = quaternion[0]
+        # odom.pose.pose.orientation.y = quaternion[1]
+        # odom.pose.pose.orientation.z = quaternion[2]
+        # odom.pose.pose.orientation.w = quaternion[3]
+        odom.pose.pose.orientation = magnetic_direction.orientation
 
-            odom.pose.pose.position.x += v_wx*dt*speed_multiplier
-            odom.pose.pose.position.y += v_wy*dt*speed_multiplier
-            # quaternion = quaternion_from_euler(0, 0, theta)
-            # odom.pose.pose.orientation.x = quaternion[0]
-            # odom.pose.pose.orientation.y = quaternion[1]
-            # odom.pose.pose.orientation.z = quaternion[2]
-            # odom.pose.pose.orientation.w = quaternion[3]
-            odom.pose.pose.orientation = magnetic_direction.orientation
+        odom.twist.twist.linear.x = cmd_vel.linear.x
+        odom.twist.twist.angular.z = cmd_vel.angular.z
 
-            odom.twist.twist.linear.x = cmd_vel.linear.x
-            odom.twist.twist.angular.z = cmd_vel.angular.z
+        odom_pub.publish(odom)
 
-            odom_pub.publish(odom)
+        base_link_broadcaster.sendTransform(
+            (odom.pose.pose.position.x, odom.pose.pose.position.y, 0),
+            (
+                magnetic_direction.orientation.x,
+                magnetic_direction.orientation.y,
+                magnetic_direction.orientation.z,
+                magnetic_direction.orientation.w,
+                # 1,
+            ),
+            rospy.Time.now(),
+            "base_link",
+            "odom",
+        )
 
-            base_link_broadcaster.sendTransform(
-                (odom.pose.pose.position.x, odom.pose.pose.position.y, 0),
-                (
-                    magnetic_direction.orientation.x,
-                    magnetic_direction.orientation.y,
-                    magnetic_direction.orientation.z,
-                    magnetic_direction.orientation.w,
-                    # 1,
-                ),
-                rospy.Time.now(),
-                "base_link",
-                "odom",
-            )
+        latitude = initial_lat + ((odom.pose.pose.position.y / 1000) / 6378.137) * (
+            180 / pi
+        )
+        longitude = initial_lon + ((odom.pose.pose.position.x / 1000) / 6378.137) * (
+            180 / pi
+        ) / cos(latitude * pi / 180)
 
-            latitude = initial_lat + ((odom.pose.pose.position.y / 1000) / 6378.137) * (
-                180 / pi
-            )
-            longitude = initial_lon + ((odom.pose.pose.position.x / 1000) / 6378.137) * (
-                180 / pi
-            ) / cos(latitude * pi / 180)
+        navsat.header.frame_id = "navsat"
+        navsat.latitude = latitude
+        navsat.longitude = longitude
+        navsat.altitude = 0
 
-            navsat.header.frame_id = "navsat"
-            navsat.latitude = latitude
-            navsat.longitude = longitude
-            navsat.altitude = 0
+        navsat_pub.publish(navsat)
+        previous_encoder_val = current_encoder_val
 
-            navsat_pub.publish(navsat)
-            previous_encoder_val = current_encoder_val
-
-            rospy.sleep(dt)
+        rospy.sleep(dt)
 
     rospy.on_shutdown(shutdown)
 
