@@ -1,0 +1,32 @@
+<launch>
+
+  <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+    <arg name="align_depth"   value="true"/>
+    <arg name="unite_imu_method" value="copy"/>
+    <arg name="enable_gyro"   value="true"/>
+    <arg name="enable_accel"  value="true"/>
+    <!-- <arg name="initial_reset" value="true"/> -->
+ </include>
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+    <rosparam command="load" file="$(find nda_bot)/params/ekf_template.yaml" />
+
+    <!--  Placeholder for output topic remapping
+    <remap from="odometry/filtered" to=""/>
+    <remap from="accel/filtered" to=""/>
+    -->
+
+  </node>
+  <node name="serial_node" pkg="rosserial_python" type="serial_node.py">
+    <param name="port" value="/dev/ttyUSB0" />
+    <param name="baud" value="57600" />
+  </node>
+
+  <!-- <node pkg="imu_filter_madgwick" type="imu_filter_node" name="imu_filter_node">
+    <param name="use_mag" value="true" />
+    <param name="publish_tf" value="false" />
+    <param name="world_frame" value="enu" />
+    <remap from="imu/mag" to="/magnetic_field"/>
+    <remap from="/imu/data_raw" to="/camera/imu"/>
+    <remap from="/imu/data" to="/imu/filtered"/>
+</node> -->
+</launch>

@@ -5,7 +5,9 @@
     <param name="baud" value="57600" />
   </node>
 
-  <node pkg="nda_bot" type="calculate_odometry.py" name="calculate_odometry"></node>
+  <!-- <node pkg="nda_bot" type="calculate_pedometry.py" name="calculate_pedometry" output="screen"></node> -->
+
+  <node pkg="nda_bot" type="calculate_pedometry_v2.py" name="calculate_pedometry_v2" output="screen"></node>
 
   <node pkg="tf" type="static_transform_publisher" name="nda_bot_transform"
     args="0 0 0 0 0 0 /map /odom 100" />

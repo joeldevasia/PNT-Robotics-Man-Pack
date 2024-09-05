@@ -30,8 +30,8 @@ speed_multiplier = 20
 gps_received = Bool()
 gps_received.data = False
 
-initial_lat = 0
-initial_lon = 0
+initial_lat = 19.2160237
+initial_lon = 73.107981
 
 cmd_vel = Twist()
 
@@ -88,9 +88,9 @@ def main():
     navsat = NavSatFix()
 
     # global gps_received
-    while gps_received.data == False:
-        print("gps_received: ", gps_received.data)
-        rospy.sleep(1)
+    # while gps_received.data == False:
+    #     print("gps_received: ", gps_received.data)
+    #     rospy.sleep(1)
         # gps_sub.unregister()
     while not rospy.is_shutdown():
         gps_sub.unregister()
