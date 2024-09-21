@@ -97,7 +97,9 @@ def main():
     # rospy.sleep(5)
     odom = Odometry()
     navsat = NavSatFix()
-
+    print("Waiting for GPS")
+    # rospy.wait_for_message("/raw_gps", NavSatFix)
+    print("GPS Received")
     navsat.header.frame_id = "navsat"
     navsat.latitude = initial_lat
     navsat.longitude = initial_lon
@@ -198,7 +200,7 @@ def main():
         if max>((dynamic_threshold) +sensitivity/2) and min<(dynamic_threshold -sensitivity/2):
             total_steps += 2
             steps_pub.publish(total_steps)
-            # print("Total Steps: ", total_steps)
+            print("Total Steps: ", total_steps)
             acc_buffer_window = []
 
             d_x = stride_length * cos(theta)
