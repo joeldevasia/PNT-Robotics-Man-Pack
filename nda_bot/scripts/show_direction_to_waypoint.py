@@ -14,7 +14,7 @@ from std_msgs.msg import Bool
 from math import sqrt
 from math import radians
 import numpy as np
-from geometry_msgs.msg import PointStamped, Point, Pose, PoseStamped
+from geometry_msgs.msg import PointStamped, Point, Pose, PoseStamped, PoseArray, Polygon
 import matplotlib.pyplot as plt
 from marti_visualization_msgs.msg import TexturedMarker
 from visualization_msgs.msg import Marker
@@ -31,6 +31,8 @@ class WaypointClass:
         self.id = 0
         self.latitude = 0
         self.longitude = 0
+        self.x = 0
+        self.y = 0
 
 magnetic_direction = Imu()
 magnetic_direction.orientation.w = 1
@@ -45,7 +47,7 @@ navsat = NavSatFix()
 gps_received = Bool()
 gps_received.data = False
 
-max_waypoint_length = 3
+max_waypoint_length = 10
 waypoint_list = []
 
 initial_lat = 0
@@ -92,10 +94,18 @@ def waypoint_callback(msg):
         waypoint.id = len(waypoint_list)+1
         waypoint.latitude = msg.point.y
         waypoint.longitude = msg.point.x
-        waypoint_list.append(waypoint)
         print("ID: ", waypoint.id, "Lat: ", waypoint.latitude, "Lon: ", waypoint.longitude)
         wgs = Wgs84Transformer(local_origin=origin)
         (x, y) = Wgs84Transformer.wgs84_to_local_xy(wgs, (waypoint.latitude, waypoint.longitude))
+        waypoint.x = x
+        waypoint.y = y
+        waypoint_list.append(waypoint)
+        
+        waypoint_line_points = NavSatFix()
+        waypoint_line_points.latitude = waypoint.latitude
+        waypoint_line_points.longitude = waypoint.longitude
+        waypoint_line_points.altitude = 0
+        waypoint_line_pub.publish(waypoint_line_points)
         pub_waypoint_marker(id=len(waypoint_list), point=Point(x=x, y=y), action=Marker.ADD)
     print("Waypoint received")
 
@@ -122,13 +132,44 @@ def pub_waypoint_marker(id, action = Marker.ADD, point = Point(x=0, y=0)):
     marker.scale.y = 5
     marker.scale.z = 0.1
     marker.color.a = 1.0
-    marker.color.r = 1.0 if len(waypoint_list) == 1 else 0.0
-    marker.color.g = 1.0 if len(waypoint_list) == 2 else 0.0
-    marker.color.b = 1.0 if len(waypoint_list) == 3 else 0.0
+    marker.color.r = 1.0 #if len(waypoint_list) == 1 else 0.0
+    marker.color.g = 1.0 #if len(waypoint_list) == 2 else 0.0
+    marker.color.b = 1.0 #if len(waypoint_list) == 3 else 0.0
     marker_pub.publish(marker)
+    if(len(waypoint_list)>1):
+        distance_text = Marker()
+        distance_text.header.frame_id = "map"
+        distance_text.header.stamp = rospy.Time(0)
+        distance_text.ns = ""
+        distance_text.id = id
+        distance_text.type = Marker.TEXT_VIEW_FACING
+        distance_text.action = action
+        lat1 = radians(waypoint_list[-2].latitude)
+        lat2 = radians(waypoint_list[-1].latitude)
+        lon1 = radians(waypoint_list[-2].longitude)
+        lon2 = radians(waypoint_list[-1].longitude)
+        print("lat1: ", lat1, "lon1: ", lon1, "lat2: ", lat2, "lon2: ", lon2)
+        distance_text.text=str(round(haversine_distance(lat1, lon1, lat2, lon2, return_in_meters=False),2))+"km"
+        distance_text.pose.position.x = (point.x + waypoint_list[-2].x)/2
+        distance_text.pose.position.y = (point.y + waypoint_list[-2].y)/2
+        distance_text.pose.position.z = 0.0
+        distance_text.pose.orientation.x = 0.0
+        distance_text.pose.orientation.y = 0.0
+        distance_text.pose.orientation.z = 0.0
+        distance_text.pose.orientation.w = 1.0
+        distance_text.scale.x = 10
+        distance_text.scale.y = 10
+        distance_text.scale.z = 0.1
+        distance_text.color.a = 1.0
+        distance_text.color.r = 1.0
+        distance_text.color.g = 1.0
+        waypoint_distances_pub.publish(distance_text)
+
+
     print("Marker "+str(id)+" Added" if action == Marker.ADD else "Removed")
 
-def eucledean_distance(lat1, lon1, lat2, lon2):
+
+def haversine_distance(lat1, lon1, lat2, lon2, return_in_meters=True):
     # R = 6378.137; # Radius of earth in KM
     # dLat = lat2 * pi / 180 - lat1 * pi / 180
     # dLon = lon2 * pi / 180 - lon1 * pi / 180
@@ -150,12 +191,15 @@ def eucledean_distance(lat1, lon1, lat2, lon2):
     deltaLon = abs(lon1 - lon2)
 
     dist_m = sqrt (  pow( deltaLat * m_per_deg_lat,2) + pow( deltaLon * m_per_deg_lon , 2) )
-    return dist_m
+    return dist_m/(1 if return_in_meters else 1000)
+
 
 
 navsat_pub = rospy.Subscriber("/navsat/fix", NavSatFix, navsat_callback)
 marker_pub = rospy.Publisher("/waypoint_marker", Marker, queue_size=10)
 origin_sub = rospy.Subscriber("/local_xy_origin", PoseStamped, origin_callback)
+waypoint_line_pub = rospy.Publisher("/waypoint_lines", NavSatFix, queue_size=10)
+waypoint_distances_pub = rospy.Publisher("/waypoint_distances", Marker, queue_size=10)
 
 odom_pub = rospy.Publisher("/odom", Odometry, queue_size=10)
 
@@ -205,8 +249,8 @@ def main():
                 print(e)
             # print("Bearing: ", bearing)
 
-            distance = eucledean_distance(lat1, lon1, lat2, lon2)
-            print("Distance: ", distance)
+            distance = haversine_distance(lat1, lon1, lat2, lon2)
+            # print("Distance: ", distance)
             if distance < 10:
                 # print("Distance: ", distance)
                 print("Waypoint "+ str(waypoint_list[0].id) + " reached")

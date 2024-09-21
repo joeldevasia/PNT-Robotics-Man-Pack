@@ -162,7 +162,7 @@ def main():
 
         if max_found == False:
             acc_buffer_window = []
-            print("Max not found")
+            # print("Max not found")
             continue
         
         acc_buffer_window = []
@@ -190,15 +190,15 @@ def main():
         #     print("Min not found")
         #     continue
         
-        print("Max: ", str(round(max,2)) + " ("+ str(dynamic_threshold +sensitivity)+")", " Min: ", str(round(min,2))  + " ("+ str(dynamic_threshold -sensitivity/2)+")", " Max Time: ", round(max_time,3), "Min Time: ", round(min_time,3))
+        # print("Max: ", str(round(max,2)) + " ("+ str(dynamic_threshold +sensitivity)+")", " Min: ", str(round(min,2))  + " ("+ str(dynamic_threshold -sensitivity/2)+")", " Max Time: ", round(max_time,3), "Min Time: ", round(min_time,3))
         if max-min > sensitivity:
             dynamic_threshold = max-min
-            print("                         Dynamic Threshold: ", dynamic_threshold)
+            # print("                         Dynamic Threshold: ", dynamic_threshold)
 
         if max>((dynamic_threshold) +sensitivity/2) and min<(dynamic_threshold -sensitivity/2):
             total_steps += 2
             steps_pub.publish(total_steps)
-            print("Total Steps: ", total_steps)
+            # print("Total Steps: ", total_steps)
             acc_buffer_window = []
 
             d_x = stride_length * cos(theta)
