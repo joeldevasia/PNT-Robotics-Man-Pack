@@ -41,6 +41,9 @@ gps_received.data = False
 
 base_link_broadcaster = tf.TransformBroadcaster()
 
+initial_lat = 19.216204895299665 
+initial_lon = 73.10804527638642
+
 def magnetometer_callback(msg):
     global magnetic_direction
     magnetic_direction.orientation = msg.orientation
@@ -67,7 +70,7 @@ def get_avg_acc():
         current_avg_acc.x += current_acc.x
         current_avg_acc.y += current_acc.y
         current_avg_acc.z += current_acc.z
-        rospy.sleep(0.01)
+        rospy.sleep(0.0001)
         count += 1
 
     current_avg_acc.x /= samples
@@ -95,17 +98,21 @@ def main():
     odom = Odometry()
     navsat = NavSatFix()
 
-    while rospy.is_shutdown() == False and gps_received.data == False:
-        print("gps_received: ", gps_received.data)
-        rospy.sleep(1)
-    gps_sub.unregister()
+    navsat.header.frame_id = "navsat"
+    navsat.latitude = initial_lat
+    navsat.longitude = initial_lon
+
+    # while rospy.is_shutdown() == False and gps_received.data == False:
+    #     print("gps_received: ", gps_received.data)
+    #     rospy.sleep(1)
+    # gps_sub.unregister()
 
     # Callibrate
     count = 0
     
     total_steps = 0
 
-    stride_length = 0.73152
+    stride_length = 0.73152 *2
 
     acc_buffer_window = []
 
@@ -123,7 +130,7 @@ def main():
 
     num = 0
     dynamic_threshold = 0.0
-    sensitivity = 0.4
+    sensitivity = 0.3
 
     while rospy.is_shutdown() == False:
         theta = euler_from_quaternion(
@@ -149,7 +156,7 @@ def main():
             max = sorted(acc_buffer_window)[-1]
             if acc_buffer_window.index(max) == len(acc_buffer_window)//2:
                 max_found = True
-            rospy.sleep(0.001)
+            rospy.sleep(0.0001)
             max_time = rospy.get_time() - current_seconds
             # print("Max: ", max)
 
@@ -160,26 +167,35 @@ def main():
         
         acc_buffer_window = []
         current_seconds = rospy.get_time()
-        while min_time < 0.75 :
+        while min_time < 0.3 :
+            acc_buffer_window.append(get_avg_acc())
+            min = sorted(acc_buffer_window)[0]
+            # if acc_buffer_window.index(min) == len(acc_buffer_window)//2:
+            #     min_found = True
+            rospy.sleep(0.0001)
+            min_time = rospy.get_time() - current_seconds
+            # print("Min: ", min)
+
+        while min_time < 1.0 and  min_found == False:
             acc_buffer_window.append(get_avg_acc())
             min = sorted(acc_buffer_window)[0]
             if acc_buffer_window.index(min) == len(acc_buffer_window)//2:
                 min_found = True
-            rospy.sleep(0.001)
+            rospy.sleep(0.0001)
             min_time = rospy.get_time() - current_seconds
             # print("Min: ", min)
 
-        if min_found == False:
-            acc_buffer_window = []
-            print("Min not found")
-            continue
+        # if min_found == False:
+        #     acc_buffer_window = []
+        #     print("Min not found")
+        #     continue
         
-        print("Max: ", round(max,2), "Min: ", round(min,2), "Max Time: ", round(max_time,3), "Min Time: ", round(min_time,3))
+        print("Max: ", str(round(max,2)) + " ("+ str(dynamic_threshold +sensitivity)+")", " Min: ", str(round(min,2))  + " ("+ str(dynamic_threshold -sensitivity/2)+")", " Max Time: ", round(max_time,3), "Min Time: ", round(min_time,3))
         if max-min > sensitivity:
             dynamic_threshold = max-min
             print("                         Dynamic Threshold: ", dynamic_threshold)
 
-        if max>(dynamic_threshold +sensitivity/2) and min<(dynamic_threshold -sensitivity/2):
+        if max>((dynamic_threshold) +sensitivity/2) and min<(dynamic_threshold -sensitivity/2):
             total_steps += 2
             steps_pub.publish(total_steps)
             print("Total Steps: ", total_steps)
@@ -195,21 +211,7 @@ def main():
             odom.pose.pose.position.y +=d_y
             odom.pose.pose.orientation = magnetic_direction.orientation
 
-            odom_pub.publish(odom)
-
-            base_link_broadcaster.sendTransform(
-                (odom.pose.pose.position.x, odom.pose.pose.position.y, 0),
-                (
-                    magnetic_direction.orientation.x,
-                    magnetic_direction.orientation.y,
-                    magnetic_direction.orientation.z,
-                    magnetic_direction.orientation.w,
-                    # 1,
-                ),
-                rospy.Time.now(),
-                "base_link",
-                "odom",
-            )
+            
 
             latitude = initial_lat + ((odom.pose.pose.position.y / 1000) / 6378.137) * (
                 180 / pi
@@ -224,7 +226,24 @@ def main():
             navsat.altitude = 0
 
             navsat_pub.publish(navsat)
-        
+
+        odom_pub.publish(odom)
+
+        base_link_broadcaster.sendTransform(
+            (odom.pose.pose.position.x, odom.pose.pose.position.y, 0),
+            (
+                magnetic_direction.orientation.x,
+                magnetic_direction.orientation.y,
+                magnetic_direction.orientation.z,
+                magnetic_direction.orientation.w,
+                # 1,
+            ),
+            rospy.Time.now(),
+            "base_link",
+            "odom",
+        )     
+        navsat.header.stamp = rospy.Time.now()
+        navsat_pub.publish(navsat)   
 
     # rospy.sleep(dt)
 

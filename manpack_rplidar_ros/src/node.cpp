@@ -245,7 +245,7 @@ int main(int argc, char * argv[]) {
     int ver_major = SL_LIDAR_SDK_VERSION_MAJOR;
     int ver_minor = SL_LIDAR_SDK_VERSION_MINOR;
     int ver_patch = SL_LIDAR_SDK_VERSION_PATCH;    
-    ROS_INFO("RPLIDAR running on ROS package rplidar_ros, SDK Version:%d.%d.%d",ver_major,ver_minor,ver_patch);
+    ROS_INFO("RPLIDAR running on ROS package manpack_rplidar_ros, SDK Version:%d.%d.%d",ver_major,ver_minor,ver_patch);
 
     sl_result  op_result;
 
