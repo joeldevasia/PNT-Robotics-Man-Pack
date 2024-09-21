@@ -1,6 +1,8 @@
 <launch>
 
-  <node pkg="mapviz" type="mapviz" name="mapviz"></node>
+  <node pkg="mapviz" type="mapviz" name="mapviz">
+    <param name="config" value="$(find map_view)/config/mapviz.config"/>
+  </node>
 
   <node pkg="map_view" type="start_mapproxy_docker.py" name="start_mapproxy_docker" output="screen"></node>
 
