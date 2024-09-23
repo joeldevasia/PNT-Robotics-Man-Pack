@@ -1,11 +1,8 @@
 ######################################################## 
 To change initial Coordinates (Latitude & Longitude)
 
-step 0: run this command in terminal and don't close it
-        - roscore
-
 step 1: run this command in new terminal
-        - rosrun map_view initial_cordinates_gui.py
+        - roslaunch map_view initial_coordinates.launch 
 step 2: Press Load button to load previously saved Coordinates
 
 step 3: Modify the latitude and longitude

@@ -1,0 +1,5 @@
+<launch>
+
+<node pkg="map_view" type="initial_cordinates_gui.py" name="initial_cordinates_gui" output="screen"></node>
+
+</launch>
