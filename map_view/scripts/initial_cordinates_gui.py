@@ -62,17 +62,6 @@ class Window(QDialog):
 		# setting lay out
 		self.setLayout(mainLayout)
 
-	# get info method called when form is accepted
-	def getInfo(self):
-
-		# printing the form information
-		print("Latitude : {0}".format(self.initial_latiude.text()))
-		print("Longitude : {0}".format(self.initial_latiude.text()))
-
-		# closing the window
-		self.close()
-		
-
 	# create form method
 	def createForm(self):
 
@@ -110,6 +99,8 @@ class Window(QDialog):
 			yaml_data['local_xy_origins'][0]['latitude'] = float(self.initial_latiude.text())
 			yaml_data['local_xy_origins'][0]['longitude'] = float(self.initial_longitude.text())
 			yaml.dump(yaml_data, file)
+
+		self.close()
 
 
 # main method
