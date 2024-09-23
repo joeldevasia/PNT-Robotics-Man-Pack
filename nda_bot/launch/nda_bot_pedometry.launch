@@ -8,7 +8,7 @@
   <!-- <node pkg="nda_bot" type="calculate_pedometry.py" name="calculate_pedometry" output="screen"></node> -->
 
   <node pkg="nda_bot" type="calculate_pedometry_v2.py" name="calculate_pedometry_v2" output="screen"></node>
-  <node pkg="nda_bot" type="show_direction_to_waypoint.py" name="show_direction_to_waypoint" output="screen"></node>
+  <node pkg="nda_bot" type="show_waypoints.py" name="show_waypoints" output="screen"></node>
 
   <node pkg="tf" type="static_transform_publisher" name="nda_bot_transform"
     args="0 0 0 0 0 0 /map /odom 100" />

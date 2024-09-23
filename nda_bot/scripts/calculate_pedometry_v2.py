@@ -2,8 +2,8 @@
 
 import rospy
 import subprocess
-from std_msgs.msg import Int32
-from geometry_msgs.msg import Twist
+from std_msgs.msg import Int32, String
+from geometry_msgs.msg import Twist, PoseStamped
 from nav_msgs.msg import Odometry
 from math import cos, sin, pi
 from tf.transformations import quaternion_from_euler, euler_from_quaternion
@@ -14,6 +14,8 @@ from std_msgs.msg import Bool
 from math import sqrt
 import numpy as np
 import matplotlib.pyplot as plt
+import yaml
+import rospkg
 
 # plt.axis([0, 100, -15, 15])
 
@@ -36,13 +38,15 @@ current_avg_acc = acceleration()
 current_acc = acceleration()
 
 
-gps_received = Bool()
-gps_received.data = False
+origin_received = Bool()
+origin_received.data = False
 
 base_link_broadcaster = tf.TransformBroadcaster()
 
 initial_lat = 19.216204895299665 
 initial_lon = 73.10804527638642
+
+origin = NavSatFix()
 
 def magnetometer_callback(msg):
     global magnetic_direction
@@ -55,14 +59,14 @@ def imu_callback(msg):
     current_acc.z = msg.linear_acceleration.z
     current_acc.sample_num += 1
 
-def gps_callback(msg):
-    global gps_received
+def local_origin_callback(msg):
+    global origin_received
     # if gps_received.data == False:
     global initial_lat, initial_lon
     # if msg.latitude != 0 and msg.longitude != 0:
-    initial_lat = msg.latitude
-    initial_lon = msg.longitude
-    gps_received.data = True
+    initial_lat = msg.pose.position.y
+    initial_lon = msg.pose.position.x
+    origin_received.data = True
 
 def get_avg_acc():
     count = 0
@@ -89,17 +93,18 @@ def main():
 
     imu_sub = rospy.Subscriber("/raw_imu", Imu, imu_callback)
     rospy.Subscriber("/magnetometer", Imu, magnetometer_callback)
-    gps_sub = rospy.Subscriber("/raw_gps", NavSatFix, gps_callback)
+    local_xy_origin_sub = rospy.Subscriber("/local_xy_origin", PoseStamped, local_origin_callback)
     odom_pub = rospy.Publisher("/odom", Odometry, queue_size=10)
-    steps_pub = rospy.Publisher("/steps", Int32, queue_size=10)
+    steps_pub = rospy.Publisher("/steps", String, queue_size=10)
+    distance_pub = rospy.Publisher("/distance", String, queue_size=10)
     navsat_pub = rospy.Publisher("/navsat/fix", NavSatFix, queue_size=10)
 
     # rospy.sleep(5)
     odom = Odometry()
     navsat = NavSatFix()
-    print("Waiting for GPS")
-    # rospy.wait_for_message("/raw_gps", NavSatFix)
-    print("GPS Received")
+    print("Waiting for Origin")
+    rospy.wait_for_message("/local_xy_origin", PoseStamped)
+    print("Origin Received")
     navsat.header.frame_id = "navsat"
     navsat.latitude = initial_lat
     navsat.longitude = initial_lon
@@ -113,8 +118,10 @@ def main():
     count = 0
     
     total_steps = 0
+    rospack = rospkg.RosPack()
+    yaml_data = yaml.load(open(rospack.get_path('nda_bot')+"/config/config.yaml"), Loader=yaml.FullLoader)
 
-    stride_length = 0.73152 *2
+    stride_length = yaml_data['configuration'][0]['stride_length']
 
     acc_buffer_window = []
 
@@ -199,7 +206,12 @@ def main():
 
         if max>((dynamic_threshold) +sensitivity/2) and min<(dynamic_threshold -sensitivity/2):
             total_steps += 2
-            steps_pub.publish(total_steps)
+            steps_pub.publish("Total Steps: "+str(total_steps))
+            distance = total_steps*stride_length
+            if distance <1000:
+                distance_pub.publish("Distance Covered: "+str(round(distance))+"m")
+            else:
+                distance_pub.publish("Distance Covered: "+str(round(distance/1000, 2))+"km")
             print("Total Steps: ", total_steps)
             acc_buffer_window = []
 

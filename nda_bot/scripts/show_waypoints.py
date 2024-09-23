@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import yaml
 import rospy
 import subprocess
 from std_msgs.msg import Int32
@@ -50,6 +51,8 @@ gps_received.data = False
 max_waypoint_length = 10
 waypoint_list = []
 
+waypoint_counter = 0
+
 initial_lat = 0
 initial_lon = 0
 
@@ -88,10 +91,12 @@ def origin_callback(msg):
 
 def waypoint_callback(msg):
     waypoint_received.data = True
+    global waypoint_counter
     global waypoint_list
     if len(waypoint_list) < max_waypoint_length:
+        waypoint_counter += 1
         waypoint = WaypointClass()
-        waypoint.id = len(waypoint_list)+1
+        waypoint.id = waypoint_counter
         waypoint.latitude = msg.point.y
         waypoint.longitude = msg.point.x
         print("ID: ", waypoint.id, "Lat: ", waypoint.latitude, "Lon: ", waypoint.longitude)
@@ -100,29 +105,35 @@ def waypoint_callback(msg):
         waypoint.x = x
         waypoint.y = y
         waypoint_list.append(waypoint)
-        
-        waypoint_line_points = NavSatFix()
-        waypoint_line_points.latitude = waypoint.latitude
-        waypoint_line_points.longitude = waypoint.longitude
-        waypoint_line_points.altitude = 0
-        waypoint_line_pub.publish(waypoint_line_points)
-        pub_waypoint_marker(id=len(waypoint_list), point=Point(x=x, y=y), action=Marker.ADD)
+
+        pub_waypoints(id=waypoint.id, point=Point(x=waypoint.x, y=waypoint.y), action=Marker.ADD)
     print("Waypoint received")
 
 def navsat_callback(msg):
     global navsat
     navsat = msg
+    if waypoint_received.data == True:
+        pub_waypoints(id = waypoint_list[0].id, update=True)
+
+
+def pub_waypoints(id, action=Marker.ADD, point = Point(x=0, y=0), update=False):
+    if not update:
+        pub_waypoint_marker(id, action, point)
+    pub_waypoint_line(id, action, point)
+    pub_waypoint_distance_text(id, action, point)
+    
+    
 
 def pub_waypoint_marker(id, action = Marker.ADD, point = Point(x=0, y=0)):
     marker = Marker()
     marker.header.frame_id = "map"
     marker.header.stamp = rospy.Time(0)
-    marker.ns = ""
+    marker.ns = "Waypoint_Marker"
     marker.id = id
     marker.type = Marker.SPHERE
-    marker.action = action
-    marker.pose.position.x = point.x
-    marker.pose.position.y = point.y
+    marker.action = Marker.ADD
+    marker.pose.position.x = point.x if action == Marker.ADD else waypoint_list[0].x
+    marker.pose.position.y = point.y if action == Marker.ADD else waypoint_list[0].y
     marker.pose.position.z = 0.0
     marker.pose.orientation.x = 0.0
     marker.pose.orientation.y = 0.0
@@ -132,41 +143,93 @@ def pub_waypoint_marker(id, action = Marker.ADD, point = Point(x=0, y=0)):
     marker.scale.y = 5
     marker.scale.z = 0.1
     marker.color.a = 1.0
-    marker.color.r = 1.0 #if len(waypoint_list) == 1 else 0.0
-    marker.color.g = 1.0 #if len(waypoint_list) == 2 else 0.0
-    marker.color.b = 1.0 #if len(waypoint_list) == 3 else 0.0
+    marker.color.r = 0.0 if action == Marker.ADD else 0.0196078431372549
+    marker.color.g = 0.023529411764705882 if action == Marker.ADD else 0.6745098039215687
+    marker.color.b = 0.5098039215686274 if action == Marker.ADD else 0.11372549019607843
     marker_pub.publish(marker)
-    if(len(waypoint_list)>1):
-        distance_text = Marker()
-        distance_text.header.frame_id = "map"
-        distance_text.header.stamp = rospy.Time(0)
-        distance_text.ns = ""
-        distance_text.id = id
-        distance_text.type = Marker.TEXT_VIEW_FACING
-        distance_text.action = action
+
+    print("Marker "+str(id)+" Added" if action == Marker.ADD else "Removed")
+
+def pub_waypoint_line(id, action = Marker.ADD, point = Point(x=0, y=0)):
+    waypoint_line = Marker()
+    waypoint_line.header.frame_id = "map"
+    waypoint_line.header.stamp = rospy.Time(0)
+    waypoint_line.ns = "Waypoint_Line"
+    waypoint_line.id = id
+    waypoint_line.type = Marker.LINE_STRIP
+    waypoint_line.action = action
+    waypoint_line.pose.position.x = 0
+    waypoint_line.pose.position.y = 0
+    waypoint_line.pose.position.z = 0
+    waypoint_line.pose.orientation.x = 0.0
+    waypoint_line.pose.orientation.y = 0.0
+    waypoint_line.pose.orientation.z = 0.0
+    waypoint_line.pose.orientation.w = 1.0
+    waypoint_line.scale.x = 0.1
+    waypoint_line.color.a = 1.0
+    waypoint_line.color.r = 0.5
+    waypoint_line.color.g = 0.5
+    waypoint_line.color.b = 0.5
+    if id == waypoint_list[0].id:
+        wgs = Wgs84Transformer(local_origin=origin)
+        (x, y) = Wgs84Transformer.wgs84_to_local_xy(wgs, (navsat.latitude, navsat.longitude))
+
+        waypoint_line.points.append(Point(x=x, y=y))
+        waypoint_line.points.append(Point(x=waypoint_list[0].x, y=waypoint_list[0].y))
+    else:
+        waypoint_line.points.append(Point(x=point.x, y=point.y))
+        waypoint_line.points.append(Point(x=waypoint_list[-2].x, y=waypoint_list[-2].y))
+
+    waypoint_line_pub.publish(waypoint_line)
+
+
+def pub_waypoint_distance_text(id, action = Marker.ADD, point = Point(x=0, y=0)):
+    distance_text = Marker()
+    distance_text.header.frame_id = "map"
+    distance_text.header.stamp = rospy.Time(0)
+    distance_text.ns = "Waypoint_Distance"
+    distance_text.id = id
+    distance_text.type = Marker.TEXT_VIEW_FACING
+    distance_text.action = action
+    if id == waypoint_list[0].id:
+        lat1 = radians(navsat.latitude)
+        lat2 = radians(waypoint_list[0].latitude)
+        lon1 = radians(navsat.longitude)
+        lon2 = radians(waypoint_list[0].longitude)
+    else:
         lat1 = radians(waypoint_list[-2].latitude)
         lat2 = radians(waypoint_list[-1].latitude)
         lon1 = radians(waypoint_list[-2].longitude)
         lon2 = radians(waypoint_list[-1].longitude)
-        print("lat1: ", lat1, "lon1: ", lon1, "lat2: ", lat2, "lon2: ", lon2)
-        distance_text.text=str(round(haversine_distance(lat1, lon1, lat2, lon2, return_in_meters=False),2))+"km"
+    # print("lat1: ", lat1, "lon1: ", lon1, "lat2: ", lat2, "lon2: ", lon2)
+    distance_text.text=str(round(haversine_distance(lat1, lon1, lat2, lon2, return_in_meters=True),2))+"m"
+    if id == waypoint_list[0].id:
+        wgs = Wgs84Transformer(local_origin=origin)
+        (x, y) = Wgs84Transformer.wgs84_to_local_xy(wgs, (navsat.latitude, navsat.longitude))
+
+        distance_text.pose.position.x = (x +waypoint_list[0].x)/2
+        distance_text.pose.position.y = (y +waypoint_list[0].y)/2
+    else:
         distance_text.pose.position.x = (point.x + waypoint_list[-2].x)/2
         distance_text.pose.position.y = (point.y + waypoint_list[-2].y)/2
-        distance_text.pose.position.z = 0.0
-        distance_text.pose.orientation.x = 0.0
-        distance_text.pose.orientation.y = 0.0
-        distance_text.pose.orientation.z = 0.0
-        distance_text.pose.orientation.w = 1.0
-        distance_text.scale.x = 10
-        distance_text.scale.y = 10
-        distance_text.scale.z = 0.1
-        distance_text.color.a = 1.0
-        distance_text.color.r = 1.0
-        distance_text.color.g = 1.0
-        waypoint_distances_pub.publish(distance_text)
+    distance_text.pose.position.z = 0.0
+    distance_text.pose.orientation.x = 0.0
+    distance_text.pose.orientation.y = 0.0
+    distance_text.pose.orientation.z = 0.0
+    distance_text.pose.orientation.w = 1.0
+    distance_text.scale.x = 10
+    distance_text.scale.y = 10
+    distance_text.scale.z = 0.1
+    distance_text.color.a = 1.0
+    distance_text.color.r = 0.0
+    distance_text.color.g = 0.0
+    distance_text.color.b = 0.0
+    waypoint_distances_pub.publish(distance_text)
 
 
-    print("Marker "+str(id)+" Added" if action == Marker.ADD else "Removed")
+    # print("Marker "+str(id)+" Added" if action == Marker.ADD else "Removed")
+
+
 
 
 def haversine_distance(lat1, lon1, lat2, lon2, return_in_meters=True):
@@ -198,7 +261,7 @@ def haversine_distance(lat1, lon1, lat2, lon2, return_in_meters=True):
 navsat_pub = rospy.Subscriber("/navsat/fix", NavSatFix, navsat_callback)
 marker_pub = rospy.Publisher("/waypoint_marker", Marker, queue_size=10)
 origin_sub = rospy.Subscriber("/local_xy_origin", PoseStamped, origin_callback)
-waypoint_line_pub = rospy.Publisher("/waypoint_lines", NavSatFix, queue_size=10)
+waypoint_line_pub = rospy.Publisher("/waypoint_lines", Marker, queue_size=10)
 waypoint_distances_pub = rospy.Publisher("/waypoint_distances", Marker, queue_size=10)
 
 odom_pub = rospy.Publisher("/odom", Odometry, queue_size=10)
@@ -254,8 +317,7 @@ def main():
             if distance < 10:
                 # print("Distance: ", distance)
                 print("Waypoint "+ str(waypoint_list[0].id) + " reached")
-
-                pub_waypoint_marker(id=waypoint_list[0].id, action=Marker.DELETE)
+                pub_waypoints(id=waypoint_list[0].id, action=Marker.DELETE)
                 waypoint_list.pop(0)
                 if len(waypoint_list) == 0:
                     waypoint_received.data = False
