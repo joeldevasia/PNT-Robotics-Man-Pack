@@ -13,4 +13,4 @@ step 4: Press save_cordinates
 To start the manpack system
 
 step 1: run this command in terminal
-        - roslaunch map_view map_view.launch
+        - roslaunch map_view map_view.launchs
