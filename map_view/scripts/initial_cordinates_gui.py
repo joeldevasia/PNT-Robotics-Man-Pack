@@ -13,7 +13,6 @@ class Window(QDialog):
 	# constructor
 	def __init__(self):
 		super(Window, self).__init__()
-		rospy.init_node('initial_cordinates_gui', anonymous=True)
 
 		# setting window title
 		self.setWindowTitle("Insert Initial Coordinates")
@@ -105,6 +104,7 @@ class Window(QDialog):
 
 # main method
 if __name__ == '__main__':
+	rospy.init_node('initial_cordinates_gui', anonymous=True)
 
 	# create pyqt5 app
 	app = QApplication(sys.argv)
@@ -114,6 +114,8 @@ if __name__ == '__main__':
 
 	# showing the window
 	window.show()
+
+	rospy.signal_shutdown("System Exited")
 
 	# start the app
 	sys.exit(app.exec())

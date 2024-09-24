@@ -27,7 +27,7 @@ class acceleration:
         self.sample_num = 0.0
         self.vector :float = 0.0
 
-samples = 5
+samples = 10
 
 magnetic_direction = Imu()
 magnetic_direction.orientation.w = 1
@@ -139,7 +139,7 @@ def main():
 
     num = 0
     dynamic_threshold = 0.0
-    sensitivity = 0.3
+    sensitivity = 1.0
 
     while rospy.is_shutdown() == False:
         theta = euler_from_quaternion(
@@ -198,16 +198,18 @@ def main():
         #     acc_buffer_window = []
         #     print("Min not found")
         #     continue
-        
-        # print("Max: ", str(round(max,2)) + " ("+ str(dynamic_threshold +sensitivity)+")", " Min: ", str(round(min,2))  + " ("+ str(dynamic_threshold -sensitivity/2)+")", " Max Time: ", round(max_time,3), "Min Time: ", round(min_time,3))
         if max-min > sensitivity:
             dynamic_threshold = max-min
+        # print("Max: ", str(round(max,2)) + " ("+ str(dynamic_threshold +sensitivity/2)+")", " Min: ", str(round(min,2))  + " ("+ str(dynamic_threshold -sensitivity/2)+")", " Max Time: ", round(max_time,3), "Min Time: ", round(min_time,3))
+        print("Max: ", str(round(max,2)) , " Min: ", str(round(min,2)) , "Diff: ", round(max-min,3))
+        #     dynamic_threshold /=2
             # print("                         Dynamic Threshold: ", dynamic_threshold)
 
-        if max>((dynamic_threshold) +sensitivity/2) and min<(dynamic_threshold -sensitivity/2):
+        # if max>((dynamic_threshold) +sensitivity/2) and min<(dynamic_threshold +3 -sensitivity/2):
+        if max-min>1.5:
             total_steps += 2
             steps_pub.publish("Total Steps: "+str(total_steps))
-            distance = total_steps*stride_length
+            distance = total_steps*(stride_length/2)
             if distance <1000:
                 distance_pub.publish("Distance Covered: "+str(round(distance))+"m")
             else:
@@ -226,7 +228,6 @@ def main():
             odom.pose.pose.orientation = magnetic_direction.orientation
 
             
-
             latitude = initial_lat + ((odom.pose.pose.position.y / 1000) / 6378.137) * (
                 180 / pi
             )
