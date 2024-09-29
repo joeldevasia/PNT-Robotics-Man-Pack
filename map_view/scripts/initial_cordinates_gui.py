@@ -5,6 +5,7 @@ import yaml
 import os
 import rospy
 import rospkg
+import roslaunch
 
 # creating a class
 # that inherits the QDialog class
@@ -27,20 +28,26 @@ class Window(QDialog):
 		self.initial_latiude = QLineEdit()
 		self.initial_longitude = QLineEdit()
 
-		rospkg_path = rospkg.RosPack()
-		self.initial_coordinates_file_path = rospkg_path.get_path('map_view')+"/config/initial_coordinates.yaml"
+		self.rospkg_path = rospkg.RosPack()
+		self.package_path = self.rospkg_path.get_path('map_view')
+		self.initial_coordinates_file_path = self.package_path+"/config/initial_coordinates.yaml"
 
 		# calling the method that create the form
 		self.createForm()
 
 		# creating a dialog button for ok and cancel
-		self.buttonBox = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
-		
+		# QDialogButtonBox.Cancel
+		self.buttonBox = QDialogButtonBox()
+
+		startButton = QPushButton(self.tr("&Save and Start"))
+		startButton.clicked.connect(self.save_cordinates
+							  )
 		loadButton = QPushButton(self.tr("&Load"))
 		loadButton.clicked.connect(self.load_cordinates)
 		
+		self.buttonBox.addButton(QDialogButtonBox.Cancel)
 		self.buttonBox.addButton(loadButton, QDialogButtonBox.ActionRole)
-        
+		self.buttonBox.addButton(startButton, QDialogButtonBox.ActionRole)
 
 		# adding action when form is accepted
 		self.buttonBox.accepted.connect(self.save_cordinates)
@@ -80,7 +87,7 @@ class Window(QDialog):
 		
 	def load_cordinates(self):
         # Load and parse the map.yaml file
-		# print(os.getcwd()+'/src/map_view/config/map.yaml')
+		# print(os.getcwd()+'/src/carpack_map_view/config/map.yaml')
 		with open(self.initial_coordinates_file_path, 'r') as file:
 			yaml_data = yaml.safe_load(file)
 			latitude = yaml_data['local_xy_origins'][0]['latitude']
@@ -93,13 +100,28 @@ class Window(QDialog):
         # Load and parse the map.yaml file
 		with open(self.initial_coordinates_file_path, 'r') as file:
 			yaml_data = yaml.safe_load(file)
-			
+		try:
+			f = float(self.initial_latiude.text())
+			f = float(self.initial_longitude.text())
+		except Exception as e:
+			print(e)
+			return
 		with open(self.initial_coordinates_file_path, 'w') as file:
 			yaml_data['local_xy_origins'][0]['latitude'] = float(self.initial_latiude.text())
 			yaml_data['local_xy_origins'][0]['longitude'] = float(self.initial_longitude.text())
 			yaml.dump(yaml_data, file)
 
+		
 		self.close()
+		uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
+		roslaunch.configure_logging(uuid)
+		launch = roslaunch.parent.ROSLaunchParent(uuid, [self.package_path+"/launch/map_view.launch"])
+		launch.start()
+		rospy.loginfo("started")
+		rospy.sleep(10.0)
+		rospy.spin()
+		launch.shutdown()
+		
 
 
 # main method
@@ -115,7 +137,7 @@ if __name__ == '__main__':
 	# showing the window
 	window.show()
 
-	rospy.signal_shutdown("System Exited")
+	# rospy.signal_shutdown("System Exited")
 
 	# start the app
 	sys.exit(app.exec())
