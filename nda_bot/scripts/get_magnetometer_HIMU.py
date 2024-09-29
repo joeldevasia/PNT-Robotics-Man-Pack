@@ -67,7 +67,7 @@ myListener = SimplePrintListener(myHIMUServer)
 myHIMUServer.addListener(myListener)
 
 #Change the timeout (in seconds) :
-myHIMUServer.timeout = 10
+# myHIMUServer.timeout = 10
 
 # #Launch acquisition via TCP on port 2055:
 # myHIMUServer.start("TCP", 2055)
