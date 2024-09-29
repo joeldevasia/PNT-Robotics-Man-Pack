@@ -15,7 +15,9 @@ from math import sqrt
 import numpy as np
 import matplotlib.pyplot as plt
 import yaml
+import math
 import rospkg
+import utm
 
 # plt.axis([0, 100, -15, 15])
 
@@ -98,6 +100,9 @@ def main():
     steps_pub = rospy.Publisher("/steps", String, queue_size=10)
     distance_pub = rospy.Publisher("/distance", String, queue_size=10)
     navsat_pub = rospy.Publisher("/navsat/fix", NavSatFix, queue_size=10)
+    heading_pub = rospy.Publisher("/magnetic_heading", String, queue_size=10)
+    easting_northing_pub = rospy.Publisher("/easting_northing", String, queue_size=10)
+    lat_lon_pub = rospy.Publisher("/lat_lon", String, queue_size=10)
 
     # rospy.sleep(5)
     odom = Odometry()
@@ -122,6 +127,11 @@ def main():
     yaml_data = yaml.load(open(rospack.get_path('nda_bot')+"/config/config.yaml"), Loader=yaml.FullLoader)
 
     stride_length = yaml_data['configuration'][0]['stride_length']
+    easting_northing = (0, 0, 0, 0)
+    latitude = 0.0
+    longitude = 0.0
+    distance = 0
+    total_steps = 0
 
     acc_buffer_window = []
 
@@ -150,6 +160,7 @@ def main():
                 magnetic_direction.orientation.w,
             ]
         )[2]
+        heading_pub.publish("Heading: "+str(round(math.degrees(theta)))+"°")
         max = None
         min = None
 
@@ -208,12 +219,7 @@ def main():
         # if max>((dynamic_threshold) +sensitivity/2) and min<(dynamic_threshold +3 -sensitivity/2):
         if max-min>1.5:
             total_steps += 2
-            steps_pub.publish("Total Steps: "+str(total_steps))
             distance = total_steps*(stride_length/2)
-            if distance <1000:
-                distance_pub.publish("Distance Covered: "+str(round(distance))+"m")
-            else:
-                distance_pub.publish("Distance Covered: "+str(round(distance/1000, 2))+"km")
             print("Total Steps: ", total_steps)
             acc_buffer_window = []
 
@@ -239,9 +245,15 @@ def main():
             navsat.latitude = latitude
             navsat.longitude = longitude
             navsat.altitude = 0
-
+            easting_northing = utm.from_latlon(latitude=latitude, longitude=longitude)
             navsat_pub.publish(navsat)
-
+        if abs(distance) <1000:
+            distance_pub.publish("Distance Covered: "+str(round(distance))+"m")
+        else:
+            distance_pub.publish("Distance Covered: "+str(round(distance/1000, 2))+"km")
+        steps_pub.publish("Total Steps: "+str(total_steps))
+        lat_lon_pub.publish("Latitude: "+str(latitude)+"° N"+" Longitude: "+str(longitude)+"° E")
+        easting_northing_pub.publish("Easting: "+str(round(easting_northing[0], 2))+"° "+" Northing: "+str(round(easting_northing[0], 2))+"° ")
         odom_pub.publish(odom)
 
         base_link_broadcaster.sendTransform(
