@@ -31,7 +31,7 @@ sensor_msgs::NavSatFix gps_data;
 ros::Publisher imu_pub("raw_imu", &imu_data);
 ros::Publisher magnetic_dir_pub("magnetic_dir", &magnetic_dir);
 ros::Publisher magnetic_dir_raw_pub("magnetic_dir_raw", &magnetic_dir_raw);
-ros::Publisher magnetic_dir_degrees_pub("magnetic_dir_degrees", &magnetic_dir_degrees);
+ros::Publisher magnetic_dir_degrees_pub("magnetometer_degrees", &magnetic_dir_degrees);
 ros::Publisher magnetic_field_pub("magnetic_field", &magnetic_field_data);
 ros::Publisher magnetometer_pub("magnetometer", &magnetometer_data);
 ros::Publisher gps_pub("raw_gps", &gps_data);
