@@ -252,8 +252,8 @@ def main():
         else:
             distance_pub.publish("Distance Covered: "+str(round(distance/1000, 2))+"km")
         steps_pub.publish("Total Steps: "+str(total_steps))
-        lat_lon_pub.publish("Latitude: "+str(latitude)+"° N"+" Longitude: "+str(longitude)+"° E")
-        easting_northing_pub.publish("Easting: "+str(round(easting_northing[0], 2))+"° "+" Northing: "+str(round(easting_northing[0], 2))+"° ")
+        lat_lon_pub.publish("Latitude: "+str(round(latitude, 5))+"° N"+" Longitude: "+str(round(longitude, 5))+"° E")
+        easting_northing_pub.publish("Easting: "+str(round(easting_northing[0], 2))+"° "+" Northing: "+str(round(easting_northing[1], 2))+"° ")
         odom_pub.publish(odom)
 
         base_link_broadcaster.sendTransform(

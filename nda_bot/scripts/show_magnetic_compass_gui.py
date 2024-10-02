@@ -20,7 +20,7 @@ import numpy as np
 import cv2
 
 
-rospy.init_node("publish_magnetometer_node")
+rospy.init_node("show_compass_gui_node")
 magnetometer_data = Imu()
 
 mag_pub = rospy.Publisher("/magnetometer", Imu, queue_size=10)
