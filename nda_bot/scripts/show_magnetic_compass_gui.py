@@ -15,7 +15,7 @@ import math
 from math import atan2, pi
 import yaml
 import rospkg
-from HIMUServer import HIMUServer
+# from HIMUServer import HIMUServer
 import numpy as np
 import cv2
 
@@ -23,22 +23,24 @@ import cv2
 rospy.init_node("show_compass_gui_node")
 magnetometer_data = Imu()
 
-mag_pub = rospy.Publisher("/magnetometer", Imu, queue_size=10)
-heading_pub = rospy.Publisher("/magnetic_heading", String, queue_size=10)
+# mag_pub = rospy.Publisher("/magnetometer", Imu, queue_size=10)
+# heading_pub = rospy.Publisher("/magnetic_heading", String, queue_size=10)
 
 
 def main():
     # #Launch acquisition from local file:
     # myHIMUServer.start("FILE", "HIMU-filetest.csv")
-    image = cv2.imread("/home/pnt/carpack_ws/src/carpack_nda_bot/assets/Red_white_bg.png")
+    path= rospkg.RosPack().get_path('nda_bot')
+    image = cv2.imread(path+"/assets/Red_white_bg.png")
     image = cv2.resize(image, (300, 300), fx=0.1, fy=0.1)
     az = Int32()
+    
 
     def mag_deg_callback(msg):
         # global az
         az.data = int(msg.data)
 
-    rospy.Subscriber("magnetometer_degrees", Int32, mag_deg_callback)
+    rospy.Subscriber("magnetic_dir_degrees", Float32, mag_deg_callback)
     # cv2.imshow("Original", image)
     # grab the dimensions of the image and calculate the center of the
     # image

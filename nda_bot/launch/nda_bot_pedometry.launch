@@ -9,7 +9,7 @@
 
   <node pkg="nda_bot" type="calculate_pedometry_v2.py" name="calculate_pedometry_v2" output="screen"></node>
   <node pkg="nda_bot" type="show_waypoints.py" name="show_waypoints" output="screen"></node>
-   <node pkg="nda_bot" type="get_magnetometer_HIMU.py" name="get_magnetometer_HIMU" output="screen"></node>
+   <!-- <node pkg="nda_bot" type="get_magnetometer_HIMU.py" name="get_magnetometer_HIMU" output="screen"></node> -->
    <node pkg="nda_bot" type="show_magnetic_compass_gui.py" name="show_magnetic_compass_gui" output="screen"></node>
 
   <node pkg="tf" type="static_transform_publisher" name="nda_bot_transform"
