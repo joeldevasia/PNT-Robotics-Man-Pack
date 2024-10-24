@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
+import math
 import yaml
 import rospy
 import subprocess
-from std_msgs.msg import Int32
+from std_msgs.msg import Int32, Float32
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from math import cos, sin, pi, atan2
@@ -330,6 +331,7 @@ def main():
     rospy.Subscriber("/magnetometer", Imu, magnetometer_callback)
     gps_sub = rospy.Subscriber("/raw_gps", NavSatFix, gps_callback)
     waypoint_sub = rospy.Subscriber("/mapviz/waypoint", PointStamped, waypoint_callback)
+    waypoint_dir_degrees_pub = rospy.Publisher('/waypoint_dir_degrees', Float32, queue_size=10)
     
     rospy.sleep(10.0)
 
@@ -354,6 +356,7 @@ def main():
                 bearing -= 2 * pi
 
             bearing += pi/2
+            waypoint_dir_degrees_pub.publish(math.degrees(bearing))
 
             try: 
                 listener = tf.TransformListener()

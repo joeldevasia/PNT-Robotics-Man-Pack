@@ -2,7 +2,7 @@
 
 import rospy
 import subprocess
-from std_msgs.msg import Int32, String
+from std_msgs.msg import Int32, String, Float32, Float32MultiArray
 from geometry_msgs.msg import Twist, PoseStamped
 from nav_msgs.msg import Odometry
 from math import cos, sin, pi
@@ -97,11 +97,16 @@ def main():
     rospy.Subscriber("/magnetometer", Imu, magnetometer_callback)
     local_xy_origin_sub = rospy.Subscriber("/local_xy_origin", PoseStamped, local_origin_callback)
     odom_pub = rospy.Publisher("/odom", Odometry, queue_size=10)
-    steps_pub = rospy.Publisher("/steps", String, queue_size=10)
-    distance_pub = rospy.Publisher("/distance", String, queue_size=10)
+    # steps_pub = rospy.Publisher("/steps", String, queue_size=10)
+    steps_pub = rospy.Publisher("/steps", Int32, queue_size=10)
+    # distance_pub = rospy.Publisher("/distance", String, queue_size=10)
+    distance_pub = rospy.Publisher("/distance", Float32, queue_size=10)
+    speed_pub = rospy.Publisher("/speed", Float32, queue_size=10)
+    displacement_pub = rospy.Publisher("/displacement", Float32, queue_size=10)
     navsat_pub = rospy.Publisher("/navsat/fix", NavSatFix, queue_size=10)
     heading_pub = rospy.Publisher("/magnetic_heading", String, queue_size=10)
-    easting_northing_pub = rospy.Publisher("/easting_northing", String, queue_size=10)
+    # easting_northing_pub = rospy.Publisher("/easting_northing", String, queue_size=10)
+    easting_northing_pub = rospy.Publisher("/easting_northing", Float32MultiArray, queue_size=10)
     lat_lon_pub = rospy.Publisher("/lat_lon", String, queue_size=10)
 
     # rospy.sleep(5)
@@ -160,7 +165,7 @@ def main():
                 magnetic_direction.orientation.w,
             ]
         )[2]
-        heading_pub.publish("Heading: "+str(round(math.degrees(theta)))+"°")
+        # heading_pub.publish("Heading: "+str(round(math.degrees(theta)))+"°")
         max = None
         min = None
 
@@ -247,13 +252,24 @@ def main():
             navsat.altitude = 0
             easting_northing = utm.from_latlon(latitude=latitude, longitude=longitude)
             navsat_pub.publish(navsat)
-        if abs(distance) <1000:
-            distance_pub.publish("Distance Covered: "+str(round(distance))+"m")
-        else:
-            distance_pub.publish("Distance Covered: "+str(round(distance/1000, 2))+"km")
-        steps_pub.publish("Total Steps: "+str(total_steps))
-        lat_lon_pub.publish("Latitude: "+str(round(latitude, 5))+"° N"+" Longitude: "+str(round(longitude, 5))+"° E")
-        easting_northing_pub.publish("Easting: "+str(round(easting_northing[0], 2))+"° "+" Northing: "+str(round(easting_northing[1], 2))+"° ")
+
+        # if abs(distance) <1000:
+        #     distance_pub.publish("Distance Covered: "+str(round(distance))+"m")
+        # else:
+        #     distance_pub.publish("Distance Covered: "+str(round(distance/1000, 2))+"km")
+
+        distance_pub.publish(round(distance/1000, 2))
+        displacement = sqrt(odom.pose.pose.position.x**2 + odom.pose.pose.position.y**2)
+        displacement_pub.publish(round(displacement/1000, 3))
+        steps_pub.publish(total_steps)
+
+        # lat_lon_pub.publish("Latitude: "+str(round(latitude, 5))+"° N"+" Longitude: "+str(round(longitude, 5))+"° E")
+        
+        # easting_northing_pub.publish("Easting: "+str(round(easting_northing[0], 2))+"° "+" Northing: "+str(round(easting_northing[1], 2))+"° ")
+        easting_northing_msg = Float32MultiArray()
+        easting_northing_msg.data = [round(easting_northing[0], 2), round(easting_northing[1], 2)]
+        easting_northing_pub.publish(easting_northing_msg)
+
         odom_pub.publish(odom)
 
         base_link_broadcaster.sendTransform(

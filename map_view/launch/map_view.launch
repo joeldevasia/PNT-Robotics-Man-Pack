@@ -19,7 +19,7 @@
   <!-- <include file="$(find nda_bot)/launch/nda_bot.launch"/> -->
   <include file="$(find nda_bot)/launch/nda_bot_pedometry.launch"/>
 
-  <include file="$(find view_sensor)/launch/sensors.launch" />
+  <!-- <include file="$(find view_sensor)/launch/sensors.launch" /> -->
 
 
 

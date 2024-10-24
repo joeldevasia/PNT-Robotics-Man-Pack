@@ -2,7 +2,7 @@
 
 import rospy
 import subprocess
-from std_msgs.msg import Int32, String
+from std_msgs.msg import Int32, String, Float32
 from geometry_msgs.msg import Twist, PoseStamped
 from nav_msgs.msg import Odometry
 from math import cos, sin, pi
@@ -25,7 +25,8 @@ magnetometer_data = Imu()
 
 mag_pub = rospy.Publisher("/magnetometer", Imu, queue_size=10)
 heading_pub = rospy.Publisher("/magnetic_heading", String, queue_size=10)
-mag_deg_pub = rospy.Publisher("/magnetometer_degrees", Int32, queue_size=10)
+# mag_deg_pub = rospy.Publisher("/magnetometer_degrees", Int32, queue_size=10)
+mag_deg_pub = rospy.Publisher("/magnetic_dir_degrees", Float32, queue_size=10)
 
 #An example of listener implementation.
 class SimplePrintListener:
@@ -55,7 +56,7 @@ class SimplePrintListener:
         magnetometer_data.orientation.z = quats[2]
         magnetometer_data.orientation.w = quats[3]
         mag_pub.publish(magnetometer_data)
-        mag_deg_pub.publish(int(math.degrees(az)))
+        mag_deg_pub.publish(math.degrees(az))
         heading_pub.publish("Heading: "+str(round(math.degrees(az)))+"°")
 
 #HIMUServer instance:
