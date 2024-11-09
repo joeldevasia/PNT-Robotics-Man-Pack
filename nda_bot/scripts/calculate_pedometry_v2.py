@@ -217,7 +217,7 @@ def main():
         if max-min > sensitivity:
             dynamic_threshold = max-min
         # print("Max: ", str(round(max,2)) + " ("+ str(dynamic_threshold +sensitivity/2)+")", " Min: ", str(round(min,2))  + " ("+ str(dynamic_threshold -sensitivity/2)+")", " Max Time: ", round(max_time,3), "Min Time: ", round(min_time,3))
-        print("Max: ", str(round(max,2)) , " Min: ", str(round(min,2)) , "Diff: ", round(max-min,3))
+        # print("Max: ", str(round(max,2)) , " Min: ", str(round(min,2)) , "Diff: ", round(max-min,3))
         #     dynamic_threshold /=2
             # print("                         Dynamic Threshold: ", dynamic_threshold)
 
@@ -250,13 +250,12 @@ def main():
             navsat.latitude = latitude
             navsat.longitude = longitude
             navsat.altitude = 0
-            easting_northing = utm.from_latlon(latitude=latitude, longitude=longitude)
             navsat_pub.publish(navsat)
 
         # if abs(distance) <1000:
         #     distance_pub.publish("Distance Covered: "+str(round(distance))+"m")
         # else:
-        #     distance_pub.publish("Distance Covered: "+str(round(distance/1000, 2))+"km")
+        #     distance_pub.publish("Distance Covered: "+str(round(distance/1000, 2))+"km")7
 
         distance_pub.publish(round(distance/1000, 2))
         displacement = sqrt(odom.pose.pose.position.x**2 + odom.pose.pose.position.y**2)
@@ -266,8 +265,11 @@ def main():
         # lat_lon_pub.publish("Latitude: "+str(round(latitude, 5))+"° N"+" Longitude: "+str(round(longitude, 5))+"° E")
         
         # easting_northing_pub.publish("Easting: "+str(round(easting_northing[0], 2))+"° "+" Northing: "+str(round(easting_northing[1], 2))+"° ")
+        easting_northing = utm.from_latlon(latitude=latitude if latitude != 0.0 else initial_lat, longitude=longitude if longitude != 0.0 else initial_lon)
+        print("Latitude: ", latitude, "Longitude: ", longitude)
+        print(easting_northing)
         easting_northing_msg = Float32MultiArray()
-        easting_northing_msg.data = [round(easting_northing[0], 2), round(easting_northing[1], 2)]
+        easting_northing_msg.data = [round(easting_northing[0]), round(easting_northing[1])]
         easting_northing_pub.publish(easting_northing_msg)
 
         odom_pub.publish(odom)

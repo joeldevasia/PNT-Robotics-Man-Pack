@@ -408,7 +408,7 @@ border: 0px</string>
          <string notr="true">color: yellow;</string>
         </property>
         <property name="text">
-         <string>87</string>
+         <string>0.0</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -435,7 +435,7 @@ border: 0px</string>
          <string notr="true">color: yellow;</string>
         </property>
         <property name="text">
-         <string>87</string>
+         <string>0.0</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -462,7 +462,7 @@ border: 0px</string>
          <string notr="true">color: yellow;</string>
         </property>
         <property name="text">
-         <string>87</string>
+         <string>0.0</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -489,7 +489,7 @@ border: 0px</string>
          <string notr="true">color: yellow;</string>
         </property>
         <property name="text">
-         <string>87 NE</string>
+         <string>0.0 NE</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -554,7 +554,7 @@ border: 0px</string>
          <string notr="true">color: yellow;</string>
         </property>
         <property name="text">
-         <string>87</string>
+         <string>0</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -581,7 +581,7 @@ border: 0px</string>
          <string notr="true">color: yellow;</string>
         </property>
         <property name="text">
-         <string>87</string>
+         <string>0</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -608,7 +608,7 @@ border: 0px</string>
          <string notr="true">color: yellow;</string>
         </property>
         <property name="text">
-         <string>87</string>
+         <string>0</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -635,7 +635,7 @@ border: 0px</string>
          <string notr="true">color: yellow;</string>
         </property>
         <property name="text">
-         <string>87</string>
+         <string>0</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -655,8 +655,8 @@ border: 0px</string>
        <widget class="QLabel" name="Total_Steps_Label">
         <property name="geometry">
          <rect>
-          <x>1010</x>
-          <y>810</y>
+          <x>1020</x>
+          <y>820</y>
           <width>111</width>
           <height>33</height>
          </rect>
@@ -673,7 +673,7 @@ border: 0px</string>
          <string notr="true">color: yellow;</string>
         </property>
         <property name="text">
-         <string>87</string>
+         <string>0</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>

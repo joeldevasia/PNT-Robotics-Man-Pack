@@ -250,15 +250,17 @@ class Window(QMainWindow):
 		self.launch.start()
 		rospy.loginfo("started")
 		rospy.sleep(6.0)
-		# Get the list of windows
-		list = wmctrl.Window.list()
-
+		
 		mapviz_id = None
-
-		#Find mapviz window
-		for window in list:
-			if window.wm_class == 'mapviz.mapviz':
-				mapviz_id = int(window.id, 16)
+		
+		while mapviz_id is None:
+			# Get the list of windows
+			list = wmctrl.Window.list()
+			#Find mapviz window
+			for window in list:
+				if window.wm_class == 'mapviz.mapviz':
+					mapviz_id = int(window.id, 16)
+					break
 
 		mapviz_window = QWindow.fromWinId(mapviz_id)
 		mapviz_window.show()

@@ -1,6 +1,6 @@
 local_xy_origins:
 - altitude: 0.0
   heading: 0.0
-  latitude: 19.2161006
-  longitude: 73.1079562
+  latitude: 19.216097
+  longitude: 73.107921
   name: initial_pose

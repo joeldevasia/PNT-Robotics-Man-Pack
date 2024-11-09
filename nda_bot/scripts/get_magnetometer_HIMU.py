@@ -57,7 +57,7 @@ class SimplePrintListener:
         magnetometer_data.orientation.w = quats[3]
         mag_pub.publish(magnetometer_data)
         mag_deg_pub.publish(math.degrees(az))
-        heading_pub.publish("Heading: "+str(round(math.degrees(az)))+"°")
+        # heading_pub.publish("Heading: "+str(round(math.degrees(az)))+"°")
 
 #HIMUServer instance:
 myHIMUServer = HIMUServer()
