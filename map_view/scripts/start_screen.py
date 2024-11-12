@@ -24,16 +24,17 @@ class Window(QMainWindow):
 	# constructor
 	def __init__(self):
 		QMainWindow.__init__(self)
+		self.rospkg_path = rospkg.RosPack()
+		self.map_view_package_path = self.rospkg_path.get_path('map_view')
 
-		uic.loadUi("/home/pnt/manpack_ws/src/map_view/scripts/ManPack_UI.ui", self)
+		uic.loadUi(self.map_view_package_path+"/scripts/ManPack_UI.ui", self)
 
 		# setting window title
 		self.setWindowTitle("Insert Configuration Parameter")
 		self.setWindowIcon(QtGui.QIcon('logo.png'))
 		self.setFixedSize(1201, 900)
 		
-		self.rospkg_path = rospkg.RosPack()
-		self.map_view_package_path = self.rospkg_path.get_path('map_view')
+		
 		self.nda_bot_package_path = self.rospkg_path.get_path('nda_bot')
 		self.initial_coordinates_file_path = self.map_view_package_path+"/config/initial_coordinates.yaml"
 		self.config_file_path = self.nda_bot_package_path+"/config/config.yaml"

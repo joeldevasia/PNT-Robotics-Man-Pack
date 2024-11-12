@@ -23,6 +23,8 @@ if os.name == 'posix':
     is_data = lambda : select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], [])
     get_key = lambda : sys.stdin.read(1)
 
+
+
 elif os.name == 'nt':
     import msvcrt
     is_data = msvcrt.kbhit
