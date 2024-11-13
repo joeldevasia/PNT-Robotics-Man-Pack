@@ -1,3 +1,6 @@
 xhost +local:
 
-docker run -it --rm -e DISPLAY --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -v /etc/localtime:/etc/localtime:ro  -v /home/pnt-ssd-yash/manpack_ws:/home/maaanpack_ws --name manpack_container pnt/manpack:latest
+docker run -it --rm -e DISPLAY --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -v /etc/localtime:/etc/localtime:ro --name manpack_container pnt/manpack:latest
+
+
+-v /home/pnt-ssd-yash/manpack_ws:/home/maaanpack_ws
