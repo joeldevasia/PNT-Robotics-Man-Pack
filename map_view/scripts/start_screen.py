@@ -334,7 +334,7 @@ if __name__ == '__main__':
 
 	# create pyqt5 app
 	app = QApplication(sys.argv)
-	app.setWindowIcon(QtGui.QIcon('logo.png'))
+	app.setWindowIcon(QtGui.QIcon(':/Assets/logo.png'))
 	screen = app.primaryScreen()
 
 	# create the instance of our Window

@@ -9,5 +9,6 @@
     <file>blue-direction.png</file>
     <file>red-direction.png</file>
     <file>white-direction.png</file>
+    <file>logo.png</file>
   </qresource>
 </RCC>
