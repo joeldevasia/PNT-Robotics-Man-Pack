@@ -52,7 +52,7 @@ class Window(QMainWindow):
 		self.totoal_steps_sub = rospy.Subscriber('/steps', Int32, self.total_steps_callback)																
 
 		self.magnetometer_direction_pixmap = QPixmap(self.map_view_package_path+"/scripts/red-direction.png")
-		self.waypoint_direction_pixmap = QPixmap(self.map_view_package_path+"/scripts/blue-direction.png")
+		self.waypoint_direction_pixmap = QPixmap(self.map_view_package_path+"/scripts/white-direction.png")
 
 		uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
 		roslaunch.configure_logging(uuid)
