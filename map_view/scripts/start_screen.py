@@ -51,8 +51,8 @@ class Window(QMainWindow):
 		self.easting_northing_sub = rospy.Subscriber('/easting_northing', Float32MultiArray, self.easting_northing_callback)
 		self.totoal_steps_sub = rospy.Subscriber('/steps', Int32, self.total_steps_callback)																
 
-		self.magnetometer_direction_pixmap = QPixmap(self.map_view_package_path+"/scripts/red.png")
-		self.waypoint_direction_pixmap = QPixmap(self.map_view_package_path+"/scripts/blue.png")
+		self.magnetometer_direction_pixmap = QPixmap(self.map_view_package_path+"/scripts/red-direction.png")
+		self.waypoint_direction_pixmap = QPixmap(self.map_view_package_path+"/scripts/blue-direction.png")
 
 		uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
 		roslaunch.configure_logging(uuid)
