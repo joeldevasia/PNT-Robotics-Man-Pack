@@ -1,0 +1,13 @@
+<RCC>
+  <qresource prefix="Background Images">
+    <file>config_page.png</file>
+    <file>home_page.png</file>
+    <file>map_page.png</file>
+  </qresource>
+  <qresource prefix="Assets">
+    <file>arrow-enter.png</file>
+    <file>blue-direction.png</file>
+    <file>red-direction.png</file>
+    <file>white-direction.png</file>
+  </qresource>
+</RCC>

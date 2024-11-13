@@ -16,6 +16,9 @@ from sensor_msgs.msg import NavSatFix
 from PyQt5 import QtGui
 import wmctrl
 from PyQt5.QtGui import QWindow
+import resources
+
+screen = None
 
 # creating a class
 # that inherits the QDialog class
@@ -31,9 +34,9 @@ class Window(QMainWindow):
 
 		# setting window title
 		self.setWindowTitle("Insert Configuration Parameter")
-		self.setWindowIcon(QtGui.QIcon('logo.png'))
-		self.setFixedSize(1201, 900)
-		
+		height = screen.size().height()*1.0
+		width = (height*1200)/900
+		self.setFixedSize(width, height)
 		
 		self.nda_bot_package_path = self.rospkg_path.get_path('nda_bot')
 		self.initial_coordinates_file_path = self.map_view_package_path+"/config/initial_coordinates.yaml"
@@ -103,6 +106,39 @@ class Window(QMainWindow):
 
 		self.Total_Steps_Label = self.findChild(QLabel, 'Total_Steps_Label')
 
+		self.scale_widgets()
+
+	def scale_widgets(self):
+        # Get screen size
+		screen_size = QApplication.primaryScreen().availableGeometry()
+
+        # Design-time size
+		design_width = 1200
+		design_height = 900
+
+		window_height = screen.size().height()*0.9
+		window_width = (window_height*1200)/900
+		self.setFixedSize(window_width, window_height)
+
+		scale_factor = window_height/design_height  # Maintain aspect ratio
+
+        # Scale all widgets
+		for widget in self.findChildren(QWidget):
+            # Scale geometry
+			geom = widget.geometry()
+			widget_height = geom.height()*scale_factor
+			widget_width = geom.width()*scale_factor
+			
+			geom.setWidth(int(widget_width))
+			geom.setHeight(int(widget_height))
+			geom.moveTo(int(geom.x() * scale_factor), int(geom.y() * scale_factor))
+
+			widget.setGeometry(geom)
+
+			# Scale font
+			font = widget.font()
+			font.setPointSizeF(font.pointSizeF() * scale_factor)
+			widget.setFont(font)
 
 	def speed_callback(self, msg):
 		self.Speed_Label.setText(str(msg.data))
@@ -298,6 +334,8 @@ if __name__ == '__main__':
 
 	# create pyqt5 app
 	app = QApplication(sys.argv)
+	app.setWindowIcon(QtGui.QIcon('logo.png'))
+	screen = app.primaryScreen()
 
 	# create the instance of our Window
 	window = Window()

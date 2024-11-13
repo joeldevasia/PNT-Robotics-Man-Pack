@@ -11,6 +11,7 @@ find_package(catkin REQUIRED)
 find_package(mapviz REQUIRED)
 find_package(mapviz_plugins REQUIRED)
 find_package(tile_map REQUIRED)
+find_package(wmctrl REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
