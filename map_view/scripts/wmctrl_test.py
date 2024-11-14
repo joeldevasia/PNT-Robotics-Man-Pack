@@ -5,5 +5,5 @@ list = wmctrl.Window.list()
 
 #Find mapviz window
 for window in list:
-    if window.wm_class == 'mapviz.mapviz':
+    if window.wm_class == 'start_screen.py.start_screen.py':
         print(window)
