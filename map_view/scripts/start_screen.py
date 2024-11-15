@@ -171,7 +171,7 @@ class Window(QMainWindow):
 
 	def waypoint_dir_callback(self, msg):
 		try: 
-			rotated_pixmap = self.waypoint_direction_pixmap.transformed(QTransform().rotate(msg.data))
+			rotated_pixmap = self.waypoint_direction_pixmap.transformed(QTransform().rotate(360.0-msg.data))
 			self.Waypoint_Direction_Label.setPixmap(rotated_pixmap)
 		except Exception as e:
 			print(e)
