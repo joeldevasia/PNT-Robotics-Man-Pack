@@ -25,7 +25,7 @@ class Window(QMainWindow):
         # window = QWidget()
         # window.show()  # IMPORTANT!!!!! Windows are hidden by default.
 		
-		uic.loadUi("/home/pnt-ssd-yash/manpack_ws/src/map_view/scripts/ManPack_Host_UI.ui", self)
+		uic.loadUi("/home/pnt-ssd-yash/manpack_ws/src/manpack_launch_system/ManPack_Host_UI.ui", self)
 
 		window_height = screen.size().height()*0.9
 		window_width = (window_height*1200)/900
