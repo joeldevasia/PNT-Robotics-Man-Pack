@@ -10,6 +10,7 @@ import wmctrl
 from PyQt5.QtGui import QWindow
 import resources
 import subprocess
+# from ManPack_Host_UI import Ui_MainWindow
 
 screen = None
 
@@ -25,16 +26,17 @@ class Window(QMainWindow):
         # window = QWidget()
         # window.show()  # IMPORTANT!!!!! Windows are hidden by default.
 		
-		uic.loadUi("/home/pnt-ssd-yash/manpack_ws/src/manpack_launch_system/ManPack_Host_UI.ui", self)
+		# uic.loadUi(":/UI/ManPack_Host_UI.ui", self)
+		# self.setupUi(self)
 
 		window_height = screen.size().height()*0.9
 		window_width = (window_height*1200)/900
 		self.setFixedSize(window_width, window_height)
 
-		self.Mapviz_Layout = self.findChild(QVBoxLayout, 'verticalLayout')
+		# self.Mapviz_Layout = self.findChild(QVBoxLayout, 'verticalLayout')
 
         # docker run -it --rm -e DISPLAY --network host --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -v /etc/localtime:/etc/localtime:ro --name manpack_container pnt/manpack:latest
-
+		subprocess.call(["systemctl","restart","docker"])
 		self.docker_process = subprocess.Popen(["docker", "run", "-it", "--rm", "-e", "DISPLAY", "--network", "host", "--privileged", "-v", "/tmp/.X11-unix:/tmp/.X11-unix", "-v", "/etc/localtime:/etc/localtime:ro", "--name", "manpack_container", "pnt/manpack:latest"])
 
 		mapviz_id = None
@@ -58,8 +60,9 @@ class Window(QMainWindow):
 		rospy.sleep(1.0)
 
 		mapviz_widget = QWidget.createWindowContainer(mapviz_window, self)
+		self.setCentralWidget(mapviz_widget)
 
-		self.Mapviz_Layout.addWidget(mapviz_widget)
+		# self.Mapviz_Layout.addWidget(mapviz_widget)
 
 	def __del__(self):
 		# self.docker_process.terminate()

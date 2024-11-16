@@ -1,3 +1,5 @@
 /.vscode
 /CMakeLists.txt
 manpack_launch_system/manpack_docker_image.tar.gz
+manpack_launch_system/build/
+manpack_launch_system/docker_images
