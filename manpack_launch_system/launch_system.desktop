@@ -1,5 +1,0 @@
-[Desktop Entry]
-Name=ManPack System
-Type=Application
-Exec=/home/pnt-ssd-yash/manpack_ws/src/map_view/scripts/dist/launch_system
-Terminal=true

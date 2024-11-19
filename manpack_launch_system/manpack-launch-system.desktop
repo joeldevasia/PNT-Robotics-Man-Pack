@@ -1,0 +1,21 @@
+[Desktop Entry]
+
+# The type of the thing this desktop file refers to (e.g. can be Link)
+Type=Application
+
+# The application name.
+Name=ManPack System
+
+# Tooltip comment to show in menus.
+#Comment=A simple Hello World application.
+
+# The path (folder) in which the executable is run
+#Path=/opt/hello-world
+
+# The executable (can include arguments)
+Exec=/opt/manpack-launch-system/manpack-launch-system
+
+# The icon for the entry, using the name from `hicolor/scalable` without the extension.
+# You can also use a full path to a file in /opt.
+Icon=manpack-launch-system
+Terminal=true

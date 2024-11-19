@@ -26,5 +26,11 @@ echo "Removed docker group successfully!"
 
 echo "#########################"
 
+echo "Removing ManPack Launch System"
+
+sudo apt remove manpack-launch-system -y
+
+echo "ManPack Launch System removed successfully!"
+
 reboot
 
