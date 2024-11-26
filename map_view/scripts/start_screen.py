@@ -51,8 +51,8 @@ class Window(QMainWindow):
 		self.easting_northing_sub = rospy.Subscriber('/easting_northing', Float32MultiArray, self.easting_northing_callback)
 		self.totoal_steps_sub = rospy.Subscriber('/steps', Int32, self.total_steps_callback)																
 
-		self.magnetometer_direction_pixmap = QPixmap(self.map_view_package_path+"/scripts/red-direction.png")
-		self.waypoint_direction_pixmap = QPixmap(self.map_view_package_path+"/scripts/white-direction.png")
+		self.magnetometer_direction_pixmap = QPixmap(self.map_view_package_path+"/assets/red-direction.png")
+		self.waypoint_direction_pixmap = QPixmap(self.map_view_package_path+"/assets/white-direction.png")
 
 		uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
 		roslaunch.configure_logging(uuid)
@@ -334,7 +334,7 @@ if __name__ == '__main__':
 
 	# create pyqt5 app
 	app = QApplication(sys.argv)
-	app.setWindowIcon(QtGui.QIcon(':/Assets/logo.png'))
+	app.setWindowIcon(QtGui.QIcon(':/Assets/assets/logo.png'))
 	screen = app.primaryScreen()
 
 	# create the instance of our Window

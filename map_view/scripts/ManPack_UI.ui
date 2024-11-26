@@ -30,11 +30,11 @@
        <set>Qt::ImhNone</set>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="home_page">
        <property name="styleSheet">
-        <string notr="true">QWidget#home_page{border-image: url(:/Background Images/home_page.png) 0 0 0 0 stretch stretch; }</string>
+        <string notr="true">QWidget#home_page{border-image: url(:/Background Images/assets/home_page.png) 0 0 0 0 stretch stretch; };</string>
        </property>
        <widget class="QLabel" name="Initializing_text">
         <property name="enabled">
@@ -94,7 +94,7 @@
          </size>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-image: url(:/Assets/arrow-enter.png);
+         <string notr="true">background-image: url(:/Assets/assets/arrow-enter.png);
 background-repeat: no-repeat; 
 background-position: center;
 border-style: none</string>
@@ -212,7 +212,7 @@ color: yellow;</string>
       </widget>
       <widget class="QWidget" name="config_page">
        <property name="styleSheet">
-        <string notr="true">QWidget#config_page{border-image: url(:/Background Images/config_page.png)  0 0 0 0 stretch stretch; }</string>
+        <string notr="true">QWidget#config_page{border-image: url(:/Background Images/assets/config_page.png)  0 0 0 0 stretch stretch; }</string>
        </property>
        <widget class="QLineEdit" name="Latitude_Line_Edit">
         <property name="geometry">
@@ -430,7 +430,7 @@ border: 0px</string>
       </widget>
       <widget class="QWidget" name="map_page">
        <property name="styleSheet">
-        <string notr="true">QWidget#map_page{border-image: url(:/Background Images/map_page.png)  0 0 0 0 stretch stretch; }</string>
+        <string notr="true">QWidget#map_page{border-image: url(:/Background Images/assets/map_page.png)  0 0 0 0 stretch stretch; }</string>
        </property>
        <widget class="QLabel" name="Speed_Label">
         <property name="geometry">

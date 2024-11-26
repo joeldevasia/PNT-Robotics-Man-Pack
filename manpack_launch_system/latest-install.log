@@ -1,0 +1,24 @@
+#####################################################################
+#####################################################################
+#########################
+Adding user to docker group
+User added to docker group successfully!
+#########################
+Installing Docker and Dependencies...
+Docker and Dependencies installed successfully!
+#########################
+Restarting docker service...
+Docker service restarted successfully!
+#########################
+Loading ManPack Docker image
+Loaded image: pnt/manpack:latest
+REPOSITORY    TAG       IMAGE ID       CREATED      SIZE
+pnt/manpack   latest    4774ab89c167   8 days ago   3.84GB
+Docker image loaded successfully!
+#########################
+Installing ManPack Launch System and Dependencies...
+ManPack Launch System and Dependencies installed successfully!
+#########################
+System Will Reboot now in 5 seconds
+#####################################################################
+#####################################################################

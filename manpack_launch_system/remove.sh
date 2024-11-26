@@ -1,36 +1,44 @@
 #!/bin/sh
 
-echo "Deleting Manpack docker image"
-docker rmi pnt/manpack:latest
+LOGFILE=latest-uninstall.log
+rm latest-uninstall.log
+echo "#####################################################################" | tee -a $LOGFILE
+echo "#####################################################################" | tee -a $LOGFILE
+echo "Deleting Manpack docker image" | tee -a $LOGFILE
+docker rmi pnt/manpack:latest | tee -a $LOGFILE
 
-echo "Removing Docker..."
+echo "Removing Docker..." | tee -a $LOGFILE
 
 # sudo systemctl stop docker
 
-sudo apt-get remove docker.io -y
+sudo apt-get purge docker.io bridge-utils containerd runc pigz ubuntu-fan wmctrl -y | tee -a $LOGFILE
 
-sudo apt-get autoremove -y
+sudo systemctl unmask docker.service | tee -a $LOGFILE
 
-sudo systemctl unmask docker.service
+sudo systemctl unmask docker.socket | tee -a $LOGFILE
 
-sudo systemctl unmask docker.socket
+echo "Docker removed successfully!" | tee -a $LOGFILE
 
-echo "Docker removed successfully!"
+echo "#########################" | tee -a $LOGFILE
+echo "Removing docker group" | tee -a $LOGFILE
 
-echo "#########################"
-echo "Removing docker group"
+sudo groupdel docker | tee -a $LOGFILE
 
-sudo groupdel docker
+echo "Removed docker group successfully!" | tee -a $LOGFILE
 
-echo "Removed docker group successfully!"
+echo "#########################" | tee -a $LOGFILE
 
-echo "#########################"
+echo "Removing ManPack Launch System and Dependencies..." | tee -a $LOGFILE
 
-echo "Removing ManPack Launch System"
+sudo apt remove manpack-launch-system -y | tee -a $LOGFILE
+sudo apt remove wmctrl -y | tee -a $LOGFILE
+pip uninstall attrs wmctrl -y | tee -a $LOGFILE
 
-sudo apt remove manpack-launch-system -y
-
-echo "ManPack Launch System removed successfully!"
+echo "ManPack Launch System and Dependencies removed successfully!" | tee -a $LOGFILE
+echo  "System Will Reboot now in 5 seconds" | tee -a $LOGFILE
+echo "#####################################################################" | tee -a $LOGFILE
+echo "#####################################################################" | tee -a $LOGFILE
+sleep 5
 
 reboot
 
