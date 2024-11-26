@@ -12,8 +12,8 @@ Docker service restarted successfully!
 #########################
 Loading ManPack Docker image
 Loaded image: pnt/manpack:latest
-REPOSITORY    TAG       IMAGE ID       CREATED      SIZE
-pnt/manpack   latest    4774ab89c167   8 days ago   3.84GB
+REPOSITORY    TAG       IMAGE ID       CREATED          SIZE
+pnt/manpack   latest    bfd375c57b79   47 minutes ago   4.46GB
 Docker image loaded successfully!
 #########################
 Installing ManPack Launch System and Dependencies...

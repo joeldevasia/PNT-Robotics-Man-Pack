@@ -2,6 +2,8 @@
 #####################################################################
 Deleting Manpack docker image
 Untagged: pnt/manpack:latest
+Deleted: sha256:bfd375c57b79a4938ed177609952fdac87d264577cd7ee1d69a208ec4e24cd70
+Deleted: sha256:6e6f34924415bc4e76a6c22c2e59058bb24059fe9a23fe59bfd9254709d5f8d8
 Deleted: sha256:4774ab89c167cc7afc8c64af7386ea71be63613407b0ecf9faee528efd761e7f
 Deleted: sha256:0b8b40227b1bbc6675023c813edf9a4d96c9ea969919e8299e0b8ef5a9fcd301
 Deleted: sha256:ab8ae73ee70ba9bbc3fdf95758e07c8a9b28a83a8e4b231a3433666bfa5b8051
