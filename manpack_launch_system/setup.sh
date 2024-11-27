@@ -37,7 +37,7 @@ echo "#########################"| tee -a $LOGFILE
 echo "Installing ManPack Launch System and Dependencies..."| tee -a $LOGFILE
 cd installation_packages
 sudo dpkg -i ./manpack-launch-system.deb| tee -a $LOGFILE
-pip install ./attrs-24.2.0-py3-none-any.whl ./wmctrl-0.5-py2.py3-none-any.whl| tee -a $LOGFILE
+pip install ./attrs-24.2.0-py3-none-any.whl ./wmctrl-0.5-py2.py3-none-any.whl ./inflection-0.5.1-py2.py3-none-any.whl ./qstylizer-0.2.4-py2.py3-none-any.whl ./tinycss2-1.4.0-py3-none-any.whl ./webencodings-0.5.1-py2.py3-none-any.whl| tee -a $LOGFILE
 cd ..
 echo "ManPack Launch System and Dependencies installed successfully!"| tee -a $LOGFILE
 echo "#########################"| tee -a $LOGFILE

@@ -32,7 +32,7 @@ echo "Removing ManPack Launch System and Dependencies..." | tee -a $LOGFILE
 
 sudo apt remove manpack-launch-system -y | tee -a $LOGFILE
 sudo apt remove wmctrl -y | tee -a $LOGFILE
-pip uninstall attrs wmctrl -y | tee -a $LOGFILE
+pip uninstall attrs wmctrl inflection qstylizer tinycss2 webencodings -y | tee -a $LOGFILE
 
 echo "ManPack Launch System and Dependencies removed successfully!" | tee -a $LOGFILE
 echo  "System Will Reboot now in 5 seconds" | tee -a $LOGFILE
