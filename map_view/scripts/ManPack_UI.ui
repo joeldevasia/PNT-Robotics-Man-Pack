@@ -30,7 +30,7 @@
        <set>Qt::ImhNone</set>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="home_page">
        <property name="styleSheet">
@@ -103,7 +103,7 @@ border-style: none</string>
          <string/>
         </property>
        </widget>
-       <widget class="QLineEdit" name="User_ID_Line_Edit">
+       <widget class="QLineEdit" name="UserIDLineEdit">
         <property name="geometry">
          <rect>
           <x>461</x>
@@ -136,14 +136,14 @@ border-style: none</string>
          <string>User_ID</string>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color:transparent;
+         <string notr="true">QWidget#UserIDLineEdit{background-color:transparent;
 border-width: 5px;
 border-style: outset;
 border-color: yellow;
 border-radius: 10px;
 color: yellow;
 placeholder{
-color: yellow}
+color: yellow}}
 </string>
         </property>
         <property name="text">
@@ -156,7 +156,7 @@ color: yellow}
          <string>User_ID</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="Password_Line_Edit">
+       <widget class="QLineEdit" name="PasswordLineEdit">
         <property name="geometry">
          <rect>
           <x>461</x>
@@ -192,12 +192,12 @@ color: yellow}
          <enum>Qt::LeftToRight</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color:transparent;
+         <string notr="true">QWidget#PasswordLineEdit{background-color:transparent;
 border-width: 5px;
 border-style: outset;
 border-color: yellow;
 border-radius: 10px;
-color: yellow;</string>
+color: yellow;}</string>
         </property>
         <property name="text">
          <string/>

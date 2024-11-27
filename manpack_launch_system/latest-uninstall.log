@@ -2,40 +2,17 @@
 #####################################################################
 Deleting Manpack docker image
 Untagged: pnt/manpack:latest
-Deleted: sha256:bfd375c57b79a4938ed177609952fdac87d264577cd7ee1d69a208ec4e24cd70
-Deleted: sha256:6e6f34924415bc4e76a6c22c2e59058bb24059fe9a23fe59bfd9254709d5f8d8
-Deleted: sha256:4774ab89c167cc7afc8c64af7386ea71be63613407b0ecf9faee528efd761e7f
-Deleted: sha256:0b8b40227b1bbc6675023c813edf9a4d96c9ea969919e8299e0b8ef5a9fcd301
-Deleted: sha256:ab8ae73ee70ba9bbc3fdf95758e07c8a9b28a83a8e4b231a3433666bfa5b8051
-Deleted: sha256:0333b42d98227a3382ae4b2919a9266cfbe9185b45155ca56f826e52d712a3c0
-Deleted: sha256:6eb40fb940a9ae0ebe332b11cdd2671818dd32c9fd2e1c8a1f3f96aba7a52850
-Deleted: sha256:41d19326a00fb2ae472d968e1c657847d71368d6a13947ed77166bdfbfde3331
-Deleted: sha256:4703bd239260d45e80b21954576a84e2a9a7f43625197306de97cf25e45201b6
-Deleted: sha256:6fadbc8ecb3401b3d946c06e98eead0dbdc8601575bbef800e29ee2103e6eb99
-Deleted: sha256:831276c7d36e1d2a852def46346697860da35c19acd3f295812654bc63e9acff
-Deleted: sha256:42cdd60e89cf97e648c86fe383fa223b2356ddc4ec0b7298f42849bb98ebd25c
-Deleted: sha256:abc784b462ea76f07cd2ca9fd07f39aeabab8015f60dfa6a585e66d58c2baa6b
-Deleted: sha256:ed66cfeffdc75802d1667a9341d71111b31829317ee6ab958b8e396fa949e84a
-Deleted: sha256:9a96d4e178374fb9ecf80b24eb02a7db4aaeb28d55ea52f684a25a5802025565
-Deleted: sha256:245f611985acaf0cd63062802dd68e4ca0e7f9d11b5a769dd8f1af5bce5f2b43
-Deleted: sha256:5bbf706b97ee86f090230182bc6ce74e1f27b5b753e6b24e3f4d842c4b045786
-Deleted: sha256:0a35d79c6d8e70a756f89cd19be36bae80e7afddca36245ec14cc5a00c0c6390
-Deleted: sha256:71f49f18965731301c65129f4f37b3236525d63fc4e34991800c1cb8f602c956
-Deleted: sha256:bb4eb5a4aa463efcf98258a2ed8200d385b40a1f60a4af2e9c593ad62e5175c9
-Deleted: sha256:f0859d17ed393f03b0a3ad1eac9cc8c856447360517c769f097f028c83d0a701
-Deleted: sha256:4fac22c4c41551b68ecfa341edc0d3a034d56bbe5801b4bf776466d49098acd1
-Deleted: sha256:e19e056d33a4760140e7e771bf88563ccbdecf3f430989bbb928c16153e49ec0
-Deleted: sha256:b60eb7002136afc66c9e2607299d3dcce05cb5a23783645f17fb899af083e730
-Deleted: sha256:fffe76c64ef2dee2d80a8bb3ad13d65d596d04a45510b1956a976a69215dae92
+Deleted: sha256:1630598132ed2353ec909322c91ddf6fc7b7fc72dbfb8a8aa440426498d5beae
+Deleted: sha256:08a50905d72843d7753d1ca0adac99465a3b097f11a022a4b5d468cb903723d2
 Removing Docker...
 Reading package lists...
 Building dependency tree...
 Reading state information...
 The following packages will be REMOVED:
   bridge-utils* containerd* docker.io* pigz* runc* ubuntu-fan* wmctrl*
-0 upgraded, 0 newly installed, 7 to remove and 340 not upgraded.
+0 upgraded, 0 newly installed, 7 to remove and 339 not upgraded.
 After this operation, 283 MB disk space will be freed.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315782 files and directories currently installed.)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315785 files and directories currently installed.)
 Removing ubuntu-fan (0.12.13ubuntu0.1) ...
 ubuntu-fan: removing default /etc/network/fan configuration
 Removing bridge-utils (1.6-2ubuntu1) ...
@@ -46,7 +23,7 @@ Removing pigz (2.4-1) ...
 Removing runc (1.1.12-0ubuntu2~20.04.1) ...
 Removing wmctrl (1.07-7build1) ...
 Processing triggers for man-db (2.9.1-1) ...
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315452 files and directories currently installed.)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315455 files and directories currently installed.)
 Purging configuration files for ubuntu-fan (0.12.13ubuntu0.1) ...
 Purging configuration files for docker.io (24.0.7-0ubuntu2~20.04.1) ...
 
@@ -70,9 +47,9 @@ Building dependency tree...
 Reading state information...
 The following packages will be REMOVED:
   manpack-launch-system
-0 upgraded, 0 newly installed, 1 to remove and 340 not upgraded.
+0 upgraded, 0 newly installed, 1 to remove and 339 not upgraded.
 After this operation, 66.7 MB disk space will be freed.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315442 files and directories currently installed.)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315445 files and directories currently installed.)
 Removing manpack-launch-system (0.1.0) ...
 Processing triggers for mime-support (3.64ubuntu1) ...
 Processing triggers for hicolor-icon-theme (0.17-2) ...
@@ -82,7 +59,7 @@ Reading package lists...
 Building dependency tree...
 Reading state information...
 Package 'wmctrl' is not installed, so not removed
-0 upgraded, 0 newly installed, 0 to remove and 340 not upgraded.
+0 upgraded, 0 newly installed, 0 to remove and 339 not upgraded.
 Found existing installation: attrs 24.2.0
 Uninstalling attrs-24.2.0:
   Successfully uninstalled attrs-24.2.0

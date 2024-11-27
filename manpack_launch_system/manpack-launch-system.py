@@ -38,7 +38,7 @@ class Window(QMainWindow):
         # docker run -it --rm -e DISPLAY --network host --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -v /etc/localtime:/etc/localtime:ro --name manpack_container pnt/manpack:latest
 		subprocess.call(["xhost", "+local:"])
 		subprocess.call(["systemctl","restart","docker"])
-		self.docker_process = subprocess.Popen(["docker", "run", "-it", "--rm", "-e", "DISPLAY", "--network", "host", "--privileged", "-v", "/tmp/.X11-unix:/tmp/.X11-unix", "-v", "/etc/localtime:/etc/localtime:ro", "--name", "manpack_container", "pnt/manpack:latest"])
+		self.docker_process = subprocess.Popen(["docker", "run", "-it", "--rm", "-e", "DISPLAY", "--network", "host", "--privileged", "-v", "/tmp/.X11-unix:/tmp/.X11-unix", "-v", "/etc/localtime:/etc/localtime:ro", "--name", "manpack_container", "pnt/manpack:latest", "/bin/bash"])
 
 		mapviz_id = None
 		

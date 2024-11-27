@@ -12,7 +12,7 @@ echo "Generating Debian Package"
 
 sh ./package.sh
 
-fpm -C package -s dir -t deb -n "manpack-launch-system" -v 0.1.0 -p package/manpack-launch-system.deb
+fpm -C package -s dir -t deb -n "manpack-launch-system" -v 0.1.0 -p installation_packages/manpack-launch-system.deb
 
 #fpm
 

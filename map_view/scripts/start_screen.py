@@ -16,6 +16,7 @@ from sensor_msgs.msg import NavSatFix
 from PyQt5 import QtGui
 import wmctrl
 from PyQt5.QtGui import QWindow
+import qstylizer.parser
 import resources
 
 screen = None
@@ -34,8 +35,8 @@ class Window(QMainWindow):
 
 		# setting window title
 		self.setWindowTitle("Insert Configuration Parameter")
-		height = screen.size().height()*1.0
-		width = (height*1200)/900
+		height = round(screen.size().height()*1.0)
+		width = round((height*1200)/900)
 		self.setFixedSize(width, height)
 		
 		self.nda_bot_package_path = self.rospkg_path.get_path('nda_bot')
@@ -116,8 +117,8 @@ class Window(QMainWindow):
 		design_width = 1200
 		design_height = 900
 
-		window_height = screen.size().height()*0.9
-		window_width = (window_height*1200)/900
+		window_height = round(screen.size().height()*0.9)
+		window_width = round((window_height*1200)/900)
 		self.setFixedSize(window_width, window_height)
 
 		scale_factor = window_height/design_height  # Maintain aspect ratio
@@ -129,9 +130,29 @@ class Window(QMainWindow):
 			widget_height = geom.height()*scale_factor
 			widget_width = geom.width()*scale_factor
 			
-			geom.setWidth(int(widget_width))
-			geom.setHeight(int(widget_height))
-			geom.moveTo(int(geom.x() * scale_factor), int(geom.y() * scale_factor))
+			geom.setWidth(round(widget_width))
+			geom.setHeight(round(widget_height))
+			geom.moveTo(round(geom.x() * scale_factor), round(geom.y() * scale_factor))
+			##  Get Border Width from stylesheet
+			# if widget.objectName == "User_ID_Line_Edit" :
+			try:
+				if widget.objectName() == "UserIDLineEdit" or widget.objectName() == "PasswordLineEdit":
+					border_width = round(5*scale_factor)
+					border_radius = round(10*scale_factor)
+					css = qstylizer.style.StyleSheet()
+					css[f"QWidget#{widget.objectName()}"]["border-width"].setValue(f"{border_width}px")
+					css[f"QWidget#{widget.objectName()}"]["background-color"].setValue("transparent")
+					css[f"QWidget#{widget.objectName()}"]["border-style"].setValue("outset")
+					css[f"QWidget#{widget.objectName()}"]["border-color"].setValue("yellow")
+					css[f"QWidget#{widget.objectName()}"]["border-radius"].setValue(f"{border_radius}px")
+					css[f"QWidget#{widget.objectName()}"]["color"].setValue("yellow")
+					widget.setStyleSheet(css.toString())
+
+				# css = qstylizer.parser.parse(widget.styleSheet())
+				# print(css["QWidget#UserIDLineEdit"].borderWidth)
+
+			except Exception as e:
+				print(e)
 
 			widget.setGeometry(geom)
 

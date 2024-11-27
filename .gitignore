@@ -5,3 +5,5 @@ manpack_launch_system/build/
 manpack_launch_system/docker_images
 manpack_launch_system/latest-install.log
 manpack_launch_system/latest-uninstall.log
+map_view/.vscode
+map_view/scripts/__pycache__
