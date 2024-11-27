@@ -10,9 +10,9 @@ Building dependency tree...
 Reading state information...
 The following packages will be REMOVED:
   bridge-utils* containerd* docker.io* pigz* runc* ubuntu-fan* wmctrl*
-0 upgraded, 0 newly installed, 7 to remove and 339 not upgraded.
+0 upgraded, 0 newly installed, 7 to remove and 340 not upgraded.
 After this operation, 283 MB disk space will be freed.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315785 files and directories currently installed.)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315790 files and directories currently installed.)
 Removing ubuntu-fan (0.12.13ubuntu0.1) ...
 ubuntu-fan: removing default /etc/network/fan configuration
 Removing bridge-utils (1.6-2ubuntu1) ...
@@ -23,7 +23,7 @@ Removing pigz (2.4-1) ...
 Removing runc (1.1.12-0ubuntu2~20.04.1) ...
 Removing wmctrl (1.07-7build1) ...
 Processing triggers for man-db (2.9.1-1) ...
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315455 files and directories currently installed.)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315460 files and directories currently installed.)
 Purging configuration files for ubuntu-fan (0.12.13ubuntu0.1) ...
 Purging configuration files for docker.io (24.0.7-0ubuntu2~20.04.1) ...
 
@@ -47,9 +47,9 @@ Building dependency tree...
 Reading state information...
 The following packages will be REMOVED:
   manpack-launch-system
-0 upgraded, 0 newly installed, 1 to remove and 339 not upgraded.
-After this operation, 66.7 MB disk space will be freed.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315445 files and directories currently installed.)
+0 upgraded, 0 newly installed, 1 to remove and 340 not upgraded.
+After this operation, 67.0 MB disk space will be freed.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315450 files and directories currently installed.)
 Removing manpack-launch-system (0.1.0) ...
 Processing triggers for mime-support (3.64ubuntu1) ...
 Processing triggers for hicolor-icon-theme (0.17-2) ...
@@ -59,13 +59,25 @@ Reading package lists...
 Building dependency tree...
 Reading state information...
 Package 'wmctrl' is not installed, so not removed
-0 upgraded, 0 newly installed, 0 to remove and 339 not upgraded.
+0 upgraded, 0 newly installed, 0 to remove and 340 not upgraded.
 Found existing installation: attrs 24.2.0
 Uninstalling attrs-24.2.0:
   Successfully uninstalled attrs-24.2.0
 Found existing installation: wmctrl 0.5
 Uninstalling wmctrl-0.5:
   Successfully uninstalled wmctrl-0.5
+Found existing installation: inflection 0.5.1
+Uninstalling inflection-0.5.1:
+  Successfully uninstalled inflection-0.5.1
+Found existing installation: qstylizer 0.2.4
+Uninstalling qstylizer-0.2.4:
+  Successfully uninstalled qstylizer-0.2.4
+Found existing installation: tinycss2 1.4.0
+Uninstalling tinycss2-1.4.0:
+  Successfully uninstalled tinycss2-1.4.0
+Found existing installation: webencodings 0.5.1
+Uninstalling webencodings-0.5.1:
+  Successfully uninstalled webencodings-0.5.1
 ManPack Launch System and Dependencies removed successfully!
 System Will Reboot now in 5 seconds
 #####################################################################

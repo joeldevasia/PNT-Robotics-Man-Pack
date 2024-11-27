@@ -62,8 +62,8 @@ class Window(QMainWindow):
 		self.stackedWidget = self.findChild(QStackedWidget, 'stackedWidget')
 		self.stackedWidget.setCurrentIndex(0)
 
-		self.User_ID_Line_Edit = self.findChild(QLineEdit, 'User_ID_Line_Edit')
-		self.Password_Line_Edit = self.findChild(QLineEdit, 'Password_Line_Edit')
+		self.UserIDLineEdit = self.findChild(QLineEdit, 'UserIDLineEdit')
+		self.PasswordLineEdit = self.findChild(QLineEdit, 'PasswordLineEdit')
 		self.Initializing_text = self.findChild(QLabel, 'Initializing_text')
 		self.Initializing_text.setText("")
 		self.Enter_Button = self.findChild(QPushButton, 'Enter_Button')
@@ -134,7 +134,7 @@ class Window(QMainWindow):
 			geom.setHeight(round(widget_height))
 			geom.moveTo(round(geom.x() * scale_factor), round(geom.y() * scale_factor))
 			##  Get Border Width from stylesheet
-			# if widget.objectName == "User_ID_Line_Edit" :
+			# if widget.objectName == "UserIDLineEdit" :
 			try:
 				if widget.objectName() == "UserIDLineEdit" or widget.objectName() == "PasswordLineEdit":
 					border_width = round(5*scale_factor)
@@ -208,7 +208,7 @@ class Window(QMainWindow):
 		self.Longitude_Line_Edit.clear()
 
 	def authenticate_user(self):
-		if str(self.User_ID_Line_Edit.text()) == "army" and str(self.Password_Line_Edit.text()) == "1234" :
+		if str(self.UserIDLineEdit.text()) == "army" and str(self.PasswordLineEdit.text()) == "1234" :
 			for i in range(0,2):
 				self.Initializing_text.setText("Initializing")
 				self.Initializing_text.repaint()
