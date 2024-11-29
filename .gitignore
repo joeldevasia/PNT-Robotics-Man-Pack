@@ -2,12 +2,14 @@
 /CMakeLists.txt
 manpack_launch_system/manpack_docker_image.tar.gz
 manpack_launch_system/build/
+manpack_launch_system/dist/
 manpack_launch_system/package
 manpack_launch_system/docker_images
 manpack_launch_system/latest-install.log
 manpack_launch_system/latest-uninstall.log
 map_view/.vscode
 map_view/scripts/__pycache__
+manpack_launch_system/__pycache__
 manpack_launch_system/installation_packages/latest-install.log
 manpack_launch_system/installation_packages/latest-uninstall.log
 manpack_launch_system/latest-install.log

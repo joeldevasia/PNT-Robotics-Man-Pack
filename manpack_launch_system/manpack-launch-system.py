@@ -29,8 +29,8 @@ class Window(QMainWindow):
 		# uic.loadUi(":/UI/ManPack_Host_UI.ui", self)
 		# self.setupUi(self)
 
-		window_height = screen.size().height()*0.9
-		window_width = (window_height*1200)/900
+		window_height = round(screen.size().height()*0.9)
+		window_width = round((window_height*1200)/900)
 		self.setFixedSize(window_width, window_height)
 
 		# self.Mapviz_Layout = self.findChild(QVBoxLayout, 'verticalLayout')
@@ -38,7 +38,7 @@ class Window(QMainWindow):
         # docker run -it --rm -e DISPLAY --network host --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -v /etc/localtime:/etc/localtime:ro --name manpack_container pnt/manpack:latest
 		subprocess.call(["xhost", "+local:"])
 		subprocess.call(["systemctl","restart","docker"])
-		self.docker_process = subprocess.Popen(["docker", "run", "-it", "--rm", "-e", "DISPLAY", "--network", "host", "--privileged", "-v", "/tmp/.X11-unix:/tmp/.X11-unix", "-v", "/etc/localtime:/etc/localtime:ro", "--name", "manpack_container", "pnt/manpack:latest", "/bin/bash"])
+		self.docker_process = subprocess.Popen(["docker", "run", "-it", "--rm", "-e", "DISPLAY", "--network", "host", "--privileged", "-v", "/tmp/.X11-unix:/tmp/.X11-unix", "-v", "/etc/localtime:/etc/localtime:ro", "--name", "manpack_container", "pnt/manpack:latest", "/bin/bash", "-c", "source /opt/ros/noetic/setup.bash && cd home && source /home/manpack_ws/devel/setup.bash && roslaunch map_view start_system.launch"])
 
 		mapviz_id = None
 		
