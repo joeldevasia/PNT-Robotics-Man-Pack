@@ -12,9 +12,12 @@ Docker service restarted successfully!
 #########################
 Loading ManPack Docker image
 Loaded image: pnt/manpack:latest
-REPOSITORY    TAG       IMAGE ID       CREATED        SIZE
-pnt/manpack   latest    1630598132ed   25 hours ago   4.31GB
-Docker image loaded successfully!
+Loading MapServer Docker image
+Loaded image: klokantech/openmaptiles-server:latest
+REPOSITORY                       TAG       IMAGE ID       CREATED       SIZE
+pnt/manpack                      latest    ca0dcd8e1583   7 days ago    4.71GB
+klokantech/openmaptiles-server   latest    c7dfe7244ef9   5 years ago   1.48GB
+Docker images loaded successfully!
 #########################
 Installing ManPack Launch System and Dependencies...
 ManPack Launch System and Dependencies installed successfully!

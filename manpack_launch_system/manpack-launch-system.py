@@ -10,6 +10,7 @@ import wmctrl
 from PyQt5.QtGui import QWindow
 import resources
 import subprocess
+from pathlib import Path
 # from ManPack_Host_UI import Ui_MainWindow
 
 screen = None
@@ -35,13 +36,16 @@ class Window(QMainWindow):
 
 		# self.Mapviz_Layout = self.findChild(QVBoxLayout, 'verticalLayout')
 
-        # docker run -it --rm -e DISPLAY --network host --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -v /etc/localtime:/etc/localtime:ro --name manpack_container pnt/manpack:latest
+        
 		subprocess.call(["xhost", "+local:"])
 		subprocess.call(["systemctl","restart","docker"])
-		self.manpack_docker_process = subprocess.Popen(["docker", "run", "-it", "--rm", "-e", "DISPLAY", "--network", "host", "--privileged", "-v", "/tmp/.X11-unix:/tmp/.X11-unix", "-v", "/etc/localtime:/etc/localtime:ro", "--name", "manpack_container", "pnt/manpack:latest", "/bin/bash", "-c", "source /opt/ros/noetic/setup.bash && cd home && source /home/manpack_ws/devel/setup.bash && roslaunch map_view start_system.launch"])
+		# docker run --rm -it -v ~/manpack_ws/src/manpack_launch_system/map:/data -p 8080:80 --name mapserver_container klokantech/openmaptiles-server
+		command = "docker run --rm -it -v " + str(Path.home()) + "/manpack_ws/src/manpack_launch_system/map:/data -p 8080:80 --name mapserver_container klokantech/openmaptiles-server"
+		# self.mapserver_docker_process = subprocess.Popen(["docker", "run", "--rm", "-it", "-v", "/home/pnt-ssd-yash/manpack_ws/src/manpack_launch_system/map:/data", "-p", "8080:80", "--name", "mapserver_container", "klokantech/openmaptiles-server"])
+		self.mapserver_docker_process = subprocess.Popen(command, shell=True)
 
-		# docker run --rm -it -v $(pwd):/data -p 8080:80 klokantech/openmaptiles-server
-		self.mapserver_docker_process = subprocess.Popen(["docker", "run", "-it", "--rm", "-p","8080:80","--name", "mapserver_container", "klokantech/openmaptiles-server"])
+		# docker run -it --rm -e DISPLAY --network host --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -v /etc/localtime:/etc/localtime:ro --name manpack_container pnt/manpack:latest
+		self.manpack_docker_process = subprocess.Popen(["docker", "run", "-it", "--rm", "-e", "DISPLAY", "--network", "host", "--privileged", "-v", "/tmp/.X11-unix:/tmp/.X11-unix", "-v", "/etc/localtime:/etc/localtime:ro", "--name", "manpack_container", "pnt/manpack:latest", "/bin/bash", "-c", "source /opt/ros/noetic/setup.bash && cd home && source /home/manpack_ws/devel/setup.bash && roslaunch map_view start_system.launch"])
 
 		mapviz_id = None
 		

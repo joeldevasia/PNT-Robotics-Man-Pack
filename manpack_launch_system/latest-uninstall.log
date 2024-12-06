@@ -2,15 +2,27 @@
 #####################################################################
 Deleting Manpack docker image
 Untagged: pnt/manpack:latest
+Deleted: sha256:a41ebe965282504667ea8aca0efb8979536a91519dd2991ce87e433ca983f602
+Deleted: sha256:ff3c823c246f06700a94d79d5902037f58e32064718755d194e13a7520cd39ab
+Deleted: sha256:b0bc0ef685b769123bedf23f7cf3f5be8dfa450257bd104f3f8692839d283b36
+Deleted: sha256:699bde41faa74e79522e3183ce7f1fb1d7e6310e62a37d0cf4f3ec6e2c913a00
+Deleted: sha256:9951374aeda0960eaf983336a1acc98726343a78871c9d8b95385bba5d42ae89
+Deleted: sha256:415db7f7daffd6e02cb5bbdd9a05018e84d8dc987129899c5e371fb9c6ab4d40
+Deleted: sha256:ca0dcd8e158382bc36b8c868ae9dee2457f0fff0bd947880f51cffef3e3a40d3
+Deleted: sha256:67208380efb46c6ba5efff81b92cfbc6bcadddca395d7d806ea4a3231e1c6f76
 Deleted: sha256:1630598132ed2353ec909322c91ddf6fc7b7fc72dbfb8a8aa440426498d5beae
 Deleted: sha256:08a50905d72843d7753d1ca0adac99465a3b097f11a022a4b5d468cb903723d2
+Deleting MapServer docker image
+Untagged: klokantech/openmaptiles-server:latest
+Deleted: sha256:17ceb0f051676b7baecfe6dd297cbf93bb1950fd344455e94016fb7e0b6ccefb
+Deleted: sha256:3c68147580d8dab7eae4293a6100672c732ba5eb04405deb68316e2b076bb778
 Removing Docker...
 Reading package lists...
 Building dependency tree...
 Reading state information...
 The following packages will be REMOVED:
   bridge-utils* containerd* docker.io* pigz* runc* ubuntu-fan* wmctrl*
-0 upgraded, 0 newly installed, 7 to remove and 340 not upgraded.
+0 upgraded, 0 newly installed, 7 to remove and 342 not upgraded.
 After this operation, 283 MB disk space will be freed.
 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315790 files and directories currently installed.)
 Removing ubuntu-fan (0.12.13ubuntu0.1) ...
@@ -47,7 +59,7 @@ Building dependency tree...
 Reading state information...
 The following packages will be REMOVED:
   manpack-launch-system
-0 upgraded, 0 newly installed, 1 to remove and 340 not upgraded.
+0 upgraded, 0 newly installed, 1 to remove and 342 not upgraded.
 After this operation, 67.0 MB disk space will be freed.
 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315450 files and directories currently installed.)
 Removing manpack-launch-system (0.1.0) ...
@@ -59,7 +71,7 @@ Reading package lists...
 Building dependency tree...
 Reading state information...
 Package 'wmctrl' is not installed, so not removed
-0 upgraded, 0 newly installed, 0 to remove and 340 not upgraded.
+0 upgraded, 0 newly installed, 0 to remove and 342 not upgraded.
 Found existing installation: attrs 24.2.0
 Uninstalling attrs-24.2.0:
   Successfully uninstalled attrs-24.2.0
