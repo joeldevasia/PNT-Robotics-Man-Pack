@@ -30,8 +30,12 @@ echo "#########################"| tee -a $LOGFILE
 
 echo  "Loading ManPack Docker image"| tee -a $LOGFILE
 sudo docker image load --input docker_images/manpack_docker_image_1.tar.gz| tee -a $LOGFILE
+
+echo  "Loading MapServer Docker image"| tee -a $LOGFILE
+sudo docker image load --input docker_images/mapserver_docker_image.tar.gz| tee -a $LOGFILE
+
 sudo docker images| tee -a $LOGFILE
-echo "Docker image loaded successfully!"| tee -a $LOGFILE
+echo "Docker images loaded successfully!"| tee -a $LOGFILE
 echo "#########################"| tee -a $LOGFILE
 
 echo "Installing ManPack Launch System and Dependencies..."| tee -a $LOGFILE

@@ -3,5 +3,7 @@ xhost +local:
 
 docker run -it --rm -e DISPLAY --network host --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -v /etc/localtime:/etc/localtime:ro --name manpack_container pnt/manpack:latest
 
+docker run --rm -it -v $(pwd):/data -p 8080:80 klokantech/openmaptiles-server
+
 
 -v /home/pnt-ssd-yash/manpack_ws:/home/maaanpack_ws

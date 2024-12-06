@@ -38,7 +38,10 @@ class Window(QMainWindow):
         # docker run -it --rm -e DISPLAY --network host --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -v /etc/localtime:/etc/localtime:ro --name manpack_container pnt/manpack:latest
 		subprocess.call(["xhost", "+local:"])
 		subprocess.call(["systemctl","restart","docker"])
-		self.docker_process = subprocess.Popen(["docker", "run", "-it", "--rm", "-e", "DISPLAY", "--network", "host", "--privileged", "-v", "/tmp/.X11-unix:/tmp/.X11-unix", "-v", "/etc/localtime:/etc/localtime:ro", "--name", "manpack_container", "pnt/manpack:latest", "/bin/bash", "-c", "source /opt/ros/noetic/setup.bash && cd home && source /home/manpack_ws/devel/setup.bash && roslaunch map_view start_system.launch"])
+		self.manpack_docker_process = subprocess.Popen(["docker", "run", "-it", "--rm", "-e", "DISPLAY", "--network", "host", "--privileged", "-v", "/tmp/.X11-unix:/tmp/.X11-unix", "-v", "/etc/localtime:/etc/localtime:ro", "--name", "manpack_container", "pnt/manpack:latest", "/bin/bash", "-c", "source /opt/ros/noetic/setup.bash && cd home && source /home/manpack_ws/devel/setup.bash && roslaunch map_view start_system.launch"])
+
+		# docker run --rm -it -v $(pwd):/data -p 8080:80 klokantech/openmaptiles-server
+		self.mapserver_docker_process = subprocess.Popen(["docker", "run", "-it", "--rm", "-p","8080:80","--name", "mapserver_container", "klokantech/openmaptiles-server"])
 
 		mapviz_id = None
 		
@@ -67,8 +70,10 @@ class Window(QMainWindow):
 
 	def __del__(self):
 		# self.docker_process.terminate()
-		self.docker_process.kill()
-		subprocess.Popen(["docker", "kill", "manpack_container"])
+		self.manpack_docker_process.kill()
+		self.mapserver_docker_process.kill()
+		subprocess.Popen(["docker", "kill", "manpack_container"]) 
+		subprocess.Popen(["docker", "kill", "mapserver_container"])
 
 
 # main method
@@ -80,4 +85,5 @@ if __name__ == "__main__":
 	window.show()
 	app.exec()
 	subprocess.Popen(["docker", "kill", "manpack_container"])
+	subprocess.Popen(["docker", "kill", "mapserver_container"])
 	sys.exit()

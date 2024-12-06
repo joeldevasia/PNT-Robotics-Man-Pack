@@ -4,8 +4,12 @@ LOGFILE=latest-uninstall.log
 rm latest-uninstall.log
 echo "#####################################################################" | tee -a $LOGFILE
 echo "#####################################################################" | tee -a $LOGFILE
+
 echo "Deleting Manpack docker image" | tee -a $LOGFILE
 docker rmi pnt/manpack:latest | tee -a $LOGFILE
+
+echo "Deleting MapServer docker image" | tee -a $LOGFILE
+docker rmi klokantech/openmaptiles-server:latest | tee -a $LOGFILE
 
 echo "Removing Docker..." | tee -a $LOGFILE
 
