@@ -17,9 +17,8 @@ echo  "Installing Docker and Dependencies..."| tee -a $LOGFILE
 # sudo apt-get update 
 # sudo apt-get install docker.io -y
 # sudo apt install ./installation_packages/*.deb -y
-cd installation_packages
-sudo apt install ./bridge-utils.deb ./containerd.deb ./docker.io.deb ./runc.deb ./pigz.deb ./ubuntu-fan.deb ./wmctrl.deb -y| tee -a $LOGFILE
-cd ..
+sudo apt install ./installation_packages/bridge-utils.deb ./installation_packages/containerd.deb ./installation_packages/docker.io.deb ./installation_packages/runc.deb ./installation_packages/pigz.deb ./installation_packages/ubuntu-fan.deb ./installation_packages/wmctrl.deb -y| tee -a $LOGFILE
+
 echo "Docker and Dependencies installed successfully!"| tee -a $LOGFILE
 echo "#########################"| tee -a $LOGFILE
 
@@ -39,10 +38,9 @@ echo "Docker images loaded successfully!"| tee -a $LOGFILE
 echo "#########################"| tee -a $LOGFILE
 
 echo "Installing ManPack Launch System and Dependencies..."| tee -a $LOGFILE
-cd installation_packages
-sudo dpkg -i ./manpack-launch-system.deb| tee -a $LOGFILE
-pip install ./attrs-24.2.0-py3-none-any.whl ./wmctrl-0.5-py2.py3-none-any.whl ./inflection-0.5.1-py2.py3-none-any.whl ./qstylizer-0.2.4-py2.py3-none-any.whl ./tinycss2-1.4.0-py3-none-any.whl ./webencodings-0.5.1-py2.py3-none-any.whl| tee -a $LOGFILE
-cd ..
+sudo dpkg -i ./installation_packages/manpack-launch-system.deb| tee -a $LOGFILE
+pip install ./installation_packages/attrs-24.2.0-py3-none-any.whl ./installation_packages/wmctrl-0.5-py2.py3-none-any.whl ./installation_packages/inflection-0.5.1-py2.py3-none-any.whl ./installation_packages/qstylizer-0.2.4-py2.py3-none-any.whl ./installation_packages/tinycss2-1.4.0-py3-none-any.whl ./installation_packages/webencodings-0.5.1-py2.py3-none-any.whl| tee -a $LOGFILE
+
 echo "ManPack Launch System and Dependencies installed successfully!"| tee -a $LOGFILE
 echo "#########################"| tee -a $LOGFILE
 
