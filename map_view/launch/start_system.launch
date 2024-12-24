@@ -1,5 +1,0 @@
-<launch>
-
-<node pkg="map_view" type="start_screen.py" name="start_screen" output="screen"></node>
-
-</launch>
