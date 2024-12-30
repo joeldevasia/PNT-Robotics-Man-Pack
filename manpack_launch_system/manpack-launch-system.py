@@ -3,10 +3,10 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import sys
 import os
-import rospy
 from PyQt5 import uic
 from PyQt5 import QtGui
 import wmctrl
+import time
 from PyQt5.QtGui import QWindow
 import resources
 import subprocess
@@ -37,10 +37,10 @@ class Window(QMainWindow):
 		# self.Mapviz_Layout = self.findChild(QVBoxLayout, 'verticalLayout')
 
         
-		subprocess.call(["xhost", "+local:"])
-		subprocess.call(["systemctl","restart","docker"])
+		# subprocess.call(["xhost", "+local:"])
+		# subprocess.call(["systemctl","restart","docker"])
 		# docker run --rm -it -v ~/manpack_ws/src/manpack_launch_system/map:/data -p 8080:80 --name mapserver_container klokantech/openmaptiles-server
-		command = "docker run --rm -it -v " + str(Path.home()) + "/manpack_ws/src/manpack_launch_system/map:/data -p 8080:80 --name mapserver_container klokantech/openmaptiles-server"
+		command = "docker run --rm -it -v C:\Users\PNT\Desktop\Manpack\manpack_ws\src\manpack_launch_system/map:/data -p 8080:80 --name mapserver_container klokantech/openmaptiles-server"
 		# self.mapserver_docker_process = subprocess.Popen(["docker", "run", "--rm", "-it", "-v", "/home/pnt-ssd-yash/manpack_ws/src/manpack_launch_system/map:/data", "-p", "8080:80", "--name", "mapserver_container", "klokantech/openmaptiles-server"])
 		self.mapserver_docker_process = subprocess.Popen(command, shell=True)
 
@@ -65,7 +65,7 @@ class Window(QMainWindow):
 		mapviz_window.setFlags(Qt.FramelessWindowHint)
 
 		mapviz_window.hide()
-		rospy.sleep(1.0)
+		time.sleep(1.0)
 
 		mapviz_widget = QWidget.createWindowContainer(mapviz_window, self)
 		self.setCentralWidget(mapviz_widget)
