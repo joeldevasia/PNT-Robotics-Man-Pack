@@ -2,23 +2,37 @@
 #####################################################################
 Deleting Manpack docker image
 Untagged: pnt/manpack:latest
-Deleted: sha256:a043f8c27ec6ff93b49b37f18d1c287674bf74656c2b6dd332f183272b687ada
+Deleted: sha256:175f9d166427fbaff42b0104ea62cf41d2aba0547bfb2e760719d386231469e7
+Deleted: sha256:1609f0590d58b63e963dacbda44c194c5f5d4566e58778e20707726ff95e3fbe
+Deleted: sha256:6b23d466fbb5f950432f493a98f2aa5a68b45b4f8dbb7e9b0af5d0e0171291de
 Deleted: sha256:7f7a642fa62facd99ebd0372646b41b54f91fcc293ac5ca358cfefbac4846a91
-Deleted: sha256:5880e018e89bc1fd85eddd016b87696585465ffcd82f3c65bcac93008e431b63
 Deleted: sha256:95498ebf0ab4f444fa92286944bc62c68ffa1687829c7af114df36e3f254574f
-Deleted: sha256:ca0dcd8e158382bc36b8c868ae9dee2457f0fff0bd947880f51cffef3e3a40d3
 Deleted: sha256:67208380efb46c6ba5efff81b92cfbc6bcadddca395d7d806ea4a3231e1c6f76
 Deleted: sha256:08a50905d72843d7753d1ca0adac99465a3b097f11a022a4b5d468cb903723d2
 Deleting MapServer docker image
+Untagged: klokantech/openmaptiles-server:latest
+Deleted: sha256:c7dfe7244ef9813b266bc6b8ec27c9fe99cdfad9720f04786f57b40e8a4b84bb
+Deleted: sha256:7b47a2410391f61e2a0d5fa5ab329ed0317911584c8ef91b4ea8572e38d0ba37
+Deleted: sha256:c9f06e00618ef3df97835dc899a8172363db6ecbc9a44779531a406f1fa4399b
+Deleted: sha256:7870d802ad2f3c9daf46c71b63abdbba5e70668f75aed2b04d3f7146e6cb4803
+Deleted: sha256:b7ba630b8c53ed3fdba80a36d9268a4aedd0b21dbaf284aaa0a35abd3db571a5
+Deleted: sha256:bf0467917e15808e6e9c38268a58f048842fefb22f0a28b86e822c3e15630b14
+Deleted: sha256:dbc5d843fe6c57402d1d4b5cdded731b87189ea669351a96e1cb6ff5ffaa77a6
+Deleted: sha256:8d8dabce32d508dfcd126ab43cde7b690764c4bd06800e7cac816d367473ad3e
+Deleted: sha256:addff6454b75bcccc23ba0cdbf9ff5d83f6df71523cd3428261d1785c3e3c592
+Deleted: sha256:dae4f674403b331cb8c19b2c238ffa7d5a7249a1b4fafc4725054201dce3341a
+Deleted: sha256:a9a9c8853295275070975beba78ec0f573172e6e41b30232a00d8af0d49b8ef3
+Deleted: sha256:ddf0293e8e23246803d265b158ffbb9453d925fe392b43515984815853e9121b
+Deleted: sha256:f94641f1fe1f5c42c325652bf55f0513c881c86b620b912b15460e0bca07cc12
 Removing Docker...
 Reading package lists...
 Building dependency tree...
 Reading state information...
 The following packages will be REMOVED:
   bridge-utils* containerd* docker.io* pigz* runc* ubuntu-fan* wmctrl*
-0 upgraded, 0 newly installed, 7 to remove and 342 not upgraded.
+0 upgraded, 0 newly installed, 7 to remove and 37 not upgraded.
 After this operation, 283 MB disk space will be freed.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315790 files and directories currently installed.)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 322053 files and directories currently installed.)
 Removing ubuntu-fan (0.12.13ubuntu0.1) ...
 ubuntu-fan: removing default /etc/network/fan configuration
 Removing bridge-utils (1.6-2ubuntu1) ...
@@ -29,7 +43,7 @@ Removing pigz (2.4-1) ...
 Removing runc (1.1.12-0ubuntu2~20.04.1) ...
 Removing wmctrl (1.07-7build1) ...
 Processing triggers for man-db (2.9.1-1) ...
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315460 files and directories currently installed.)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 321723 files and directories currently installed.)
 Purging configuration files for ubuntu-fan (0.12.13ubuntu0.1) ...
 Purging configuration files for docker.io (24.0.7-0ubuntu2~20.04.1) ...
 
@@ -41,7 +55,7 @@ Nuking /var/lib/docker ...
 + rm -rf /var/lib/docker/buildkit /var/lib/docker/containers /var/lib/docker/engine-id /var/lib/docker/image /var/lib/docker/network /var/lib/docker/nuke-graph-directory.sh /var/lib/docker/overlay2 /var/lib/docker/plugins /var/lib/docker/runtimes /var/lib/docker/swarm /var/lib/docker/tmp /var/lib/docker/volumes
 Purging configuration files for bridge-utils (1.6-2ubuntu1) ...
 Purging configuration files for containerd (1.7.12-0ubuntu2~20.04.1) ...
-Processing triggers for systemd (245.4-4ubuntu3.23) ...
+Processing triggers for systemd (245.4-4ubuntu3.24) ...
 Docker removed successfully!
 #########################
 Removing docker group
@@ -53,9 +67,9 @@ Building dependency tree...
 Reading state information...
 The following packages will be REMOVED:
   manpack-launch-system
-0 upgraded, 0 newly installed, 1 to remove and 342 not upgraded.
+0 upgraded, 0 newly installed, 1 to remove and 37 not upgraded.
 After this operation, 67.0 MB disk space will be freed.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 315450 files and directories currently installed.)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 321713 files and directories currently installed.)
 Removing manpack-launch-system (0.1.0) ...
 Processing triggers for mime-support (3.64ubuntu1) ...
 Processing triggers for hicolor-icon-theme (0.17-2) ...
@@ -65,7 +79,7 @@ Reading package lists...
 Building dependency tree...
 Reading state information...
 Package 'wmctrl' is not installed, so not removed
-0 upgraded, 0 newly installed, 0 to remove and 342 not upgraded.
+0 upgraded, 0 newly installed, 0 to remove and 37 not upgraded.
 Found existing installation: attrs 24.2.0
 Uninstalling attrs-24.2.0:
   Successfully uninstalled attrs-24.2.0

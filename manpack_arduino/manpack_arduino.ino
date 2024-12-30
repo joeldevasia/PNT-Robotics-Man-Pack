@@ -6,7 +6,6 @@
 #include <sensor_msgs/NavSatFix.h>
 
 #include <SoftwareSerial.h>
-#include <TinyGPSPlus.h>
 #include <DFRobot_WT61PC.h>
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -37,9 +36,6 @@ ros::Publisher magnetometer_pub("magnetometer", &magnetometer_data);
 ros::Publisher gps_pub("raw_gps", &gps_data);
 ros::Publisher left_encoder_val_pub("left_encoder_tick", &left_encoder_val);
 ros::Publisher right_encoder_val_pub("right_encoder_tick", &right_encoder_val);
-
-// Create a TinyGPS++ object
-TinyGPSPlus gps;
 
 // Initialize the HMC5883L
 Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
@@ -153,28 +149,8 @@ void loop() {
 }
 
 void readSensorData() {
-  // gpsRead();
   gyroRead();
   compassRead();
-}
-
-void gpsRead() {
-  while (Serial1.available() > 0) {
-    gps.encode(Serial1.read());
-  }
-  if (gps.location.isValid()) {
-
-    gps_data.header.frame_id = "gps_frame";
-    gps_data.latitude = latitude;
-    gps_data.longitude = longitude;
-    gps_data.altitude = altitude;
-
-    latitude = gps.location.lat();
-    longitude = gps.location.lng();
-    altitude = gps.altitude.meters();
-    int time = gps.time.value();
-    gps_pub.publish(&gps_data);
-  }
 }
 
 void gyroRead() {

@@ -6,10 +6,10 @@ echo "#####################################################################" | t
 echo "#####################################################################" | tee -a $LOGFILE
 
 echo "Deleting Manpack docker image" | tee -a $LOGFILE
-docker rmi pnt/manpack:latest | tee -a $LOGFILE
+sudo docker rmi pnt/manpack:latest | tee -a $LOGFILE
 
-echo "Deleting MapServer docker image" | tee -a $LOGFILE
-docker rmi klokantech/openmaptiles-server:latest | tee -a $LOGFILE
+sudo echo "Deleting MapServer docker image" | tee -a $LOGFILE
+sudo docker rmi klokantech/openmaptiles-server:latest | tee -a $LOGFILE
 
 echo "Removing Docker..." | tee -a $LOGFILE
 
