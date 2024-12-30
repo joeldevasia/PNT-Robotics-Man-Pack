@@ -76,6 +76,7 @@ class Window(QMainWindow):
 		# self.docker_process.terminate()
 		self.manpack_docker_process.kill()
 		self.mapserver_docker_process.kill()
+		subprocess.Popen(["docker", "commit", "manpack_container", "pnt/manpack:latest"])
 		subprocess.Popen(["docker", "kill", "manpack_container"]) 
 		subprocess.Popen(["docker", "kill", "mapserver_container"])
 
@@ -88,6 +89,7 @@ if __name__ == "__main__":
 	window = Window()
 	window.show()
 	app.exec()
+	subprocess.Popen(["docker", "commit", "manpack_container", "pnt/manpack:latest"])
 	subprocess.Popen(["docker", "kill", "manpack_container"])
 	subprocess.Popen(["docker", "kill", "mapserver_container"])
 	sys.exit()

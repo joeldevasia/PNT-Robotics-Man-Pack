@@ -136,6 +136,8 @@ def main():
     latitude = 0.0
     longitude = 0.0
     distance = 0
+    previous_steps = 0
+    previous_steps_time = rospy.get_time()
     total_steps = 0
 
     acc_buffer_window = []
@@ -256,6 +258,12 @@ def main():
         #     distance_pub.publish("Distance Covered: "+str(round(distance))+"m")
         # else:
         #     distance_pub.publish("Distance Covered: "+str(round(distance/1000, 2))+"km")7
+
+        if total_steps - previous_steps >= 10:
+            speed = ((total_steps - previous_steps)*(stride_length/2)) / (rospy.get_time() - previous_steps_time)
+            previous_steps = total_steps
+            previous_steps_time = rospy.get_time()
+            speed_pub.publish(round(speed, 2))
 
         distance_pub.publish(round(distance/1000, 2))
         displacement = sqrt(odom.pose.pose.position.x**2 + odom.pose.pose.position.y**2)
