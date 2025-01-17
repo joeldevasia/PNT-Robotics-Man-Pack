@@ -30,82 +30,85 @@ class Window(QMainWindow):
 		QMainWindow.__init__(self)
 		self.rospkg_path = rospkg.RosPack()
 		self.map_view_package_path = self.rospkg_path.get_path('map_view')
+		self.view_sensor_package_path = self.rospkg_path.get_path('view_sensor')
 
-		uic.loadUi(self.map_view_package_path+"/scripts/ManPack_UI.ui", self)
+		uic.loadUi(self.map_view_package_path+"/scripts/ManPack_Latest.ui", self)
 
 		# setting window title
 		self.setWindowTitle("Insert Configuration Parameter")
-		height = round(screen.size().height()*1.0)
-		width = round((height*1200)/900)
-		self.setFixedSize(width, height)
+		height = round(screen.size().height()*0.9)
+		width = round((height*1300)/740)
+		self.showMaximized()
+		# self.setFixedSize(width, height)
 		
 		self.nda_bot_package_path = self.rospkg_path.get_path('nda_bot')
 		self.initial_coordinates_file_path = self.map_view_package_path+"/config/initial_coordinates.yaml"
 		self.config_file_path = self.nda_bot_package_path+"/config/config.yaml"
 
-		self.magnetic_direction = rospy.Subscriber('/magnetic_dir_degrees', Float32, self.magnetic_dir_callback)
-		self.waypoint_direction = rospy.Subscriber('/waypoint_dir_degrees', Float32, self.waypoint_dir_callback)
-		self.distance_covered_sub = rospy.Subscriber('/distance', Float32, self.distance_covered_callback)
-		self.displacement_sub = rospy.Subscriber('/displacement', Float32, self.displacement_callback)
-		self.speed_sub = rospy.Subscriber('/speed', Float32, self.speed_callback)
-		self.lat_long_sub = rospy.Subscriber('/navsat/fix', NavSatFix, self.lat_long_callback)
-		self.easting_northing_sub = rospy.Subscriber('/easting_northing', Float32MultiArray, self.easting_northing_callback)
-		self.totoal_steps_sub = rospy.Subscriber('/steps', Int32, self.total_steps_callback)																
+		# self.magnetic_direction = rospy.Subscriber('/magnetic_dir_degrees', Float32, self.magnetic_dir_callback)
+		# self.waypoint_direction = rospy.Subscriber('/waypoint_dir_degrees', Float32, self.waypoint_dir_callback)
+		# self.distance_covered_sub = rospy.Subscriber('/distance', Float32, self.distance_covered_callback)
+		# self.displacement_sub = rospy.Subscriber('/displacement', Float32, self.displacement_callback)
+		# self.speed_sub = rospy.Subscriber('/speed', Float32, self.speed_callback)
+		# self.lat_long_sub = rospy.Subscriber('/navsat/fix', NavSatFix, self.lat_long_callback)
+		# self.easting_northing_sub = rospy.Subscriber('/easting_northing', Float32MultiArray, self.easting_northing_callback)
+		# self.totoal_steps_sub = rospy.Subscriber('/steps', Int32, self.total_steps_callback)																
 
-		self.magnetometer_direction_pixmap = QPixmap(self.map_view_package_path+"/assets/red-direction.png")
-		self.waypoint_direction_pixmap = QPixmap(self.map_view_package_path+"/assets/white-direction.png")
+		# self.magnetometer_direction_pixmap = QPixmap(self.map_view_package_path+"/assets/red-direction.png")
+		# self.waypoint_direction_pixmap = QPixmap(self.map_view_package_path+"/assets/white-direction.png")
 
 		uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
 		roslaunch.configure_logging(uuid)
-		self.launch = roslaunch.parent.ROSLaunchParent(uuid, [self.map_view_package_path+"/launch/map_view.launch"])
+		self.mapviz_launch = roslaunch.parent.ROSLaunchParent(uuid, [self.map_view_package_path+"/launch/map_view.launch"])
+		self.rviz_launch = roslaunch.parent.ROSLaunchParent(uuid, [self.view_sensor_package_path+"/launch/sensors.launch"])
 
 		self.stackedWidget = self.findChild(QStackedWidget, 'stackedWidget')
 		self.stackedWidget.setCurrentIndex(0)
 
-		self.UserIDLineEdit = self.findChild(QLineEdit, 'UserIDLineEdit')
-		self.PasswordLineEdit = self.findChild(QLineEdit, 'PasswordLineEdit')
-		self.Initializing_text = self.findChild(QLabel, 'Initializing_text')
-		self.Initializing_text.setText("")
-		self.Enter_Button = self.findChild(QPushButton, 'Enter_Button')
+		self.Enter_Username_LineEdit = self.findChild(QLineEdit, 'Enter_Username_LineEdit')
+		self.Enter_Password_LineEdit = self.findChild(QLineEdit, 'Enter_Password_LineEdit')
+		self.Login_PushButton = self.findChild(QPushButton, 'Login_PushButton')
 
-		self.Enter_Button.clicked.connect(self.authenticate_user)
+		self.Login_PushButton.clicked.connect(self.authenticate_user)
 
-		self.Latitude_Line_Edit = self.findChild(QLineEdit, 'Latitude_Line_Edit')
-		self.Longitude_Line_Edit = self.findChild(QLineEdit, 'Longitude_Line_Edit')
-		self.Easting_Line_Edit = self.findChild(QLineEdit, 'Easting_Line_Edit')
-		self.Northing_Line_Edit = self.findChild(QLineEdit, 'Northing_Line_Edit')
-		self.Zone_Line_Edit = self.findChild(QLineEdit, 'Zone_Line_Edit')
-		self.Stride_Length_Line_Edit = self.findChild(QLineEdit, 'Stride_Length_Line_Edit')
-		self.Load_Button = self.findChild(QPushButton, 'Load_Button')
-		self.Save_Button = self.findChild(QPushButton, 'Save_Button')
-		self.Cancel_Button = self.findChild(QPushButton, 'Cancel_Button')
+		self.Enter_Latitude_LineEdit = self.findChild(QLineEdit, 'Enter_Latitude_LineEdit')
+		self.Enter_Longitude_LineEdit = self.findChild(QLineEdit, 'Enter_Longitude_LineEdit')
+		# self.Easting_Line_Edit = self.findChild(QLineEdit, 'Easting_Line_Edit')
+		# self.Northing_Line_Edit = self.findChild(QLineEdit, 'Northing_Line_Edit')
+		# self.Zone_Line_Edit = self.findChild(QLineEdit, 'Zone_Line_Edit')
+		# self.Stride_Length_Line_Edit = self.findChild(QLineEdit, 'Stride_Length_Line_Edit')
+		self.Load_PushButton = self.findChild(QPushButton, 'Load_PushButton')
+		self.Save_PushButton = self.findChild(QPushButton, 'Save_PushButton')
+		self.Start_PushButton = self.findChild(QPushButton, 'Start_PushButton')
+		# self.Cancel_Button = self.findChild(QPushButton, 'Cancel_Button')
 
-		self.Load_Button.clicked.connect(self.load_parameters)
-		self.Save_Button.clicked.connect(self.save_parameters)
-		self.Cancel_Button.clicked.connect(self.close)
+		self.Load_PushButton.clicked.connect(self.load_parameters)
+		self.Save_PushButton.clicked.connect(self.save_parameters)
+		self.Start_PushButton.clicked.connect(self.start_system)
+		# self.Cancel_Button.clicked.connect(self.close)
 
-		self.Latitude_Line_Edit.textChanged.connect(self.clear_easting_northing)
-		self.Longitude_Line_Edit.textChanged.connect(self.clear_easting_northing)
-
-		self.Easting_Line_Edit.textChanged.connect(self.clear_latitude_longitude)
-		self.Northing_Line_Edit.textChanged.connect(self.clear_latitude_longitude)
-		self.Zone_Line_Edit.textChanged.connect(self.clear_latitude_longitude)
-
+		self.Speed_Label = self.findChild(QLabel, 'Current_Speed_Label')
+		self.Distance_Label = self.findChild(QLabel, 'Distance_Covered_Label')
 		self.Current_Direction_Label = self.findChild(QLabel, 'Current_Direction_Label')
-		self.Waypoint_Direction_Label = self.findChild(QLabel, 'Waypoint_Direction_Label')
+		self.Current_Latitude_Label = self.findChild(QLabel, 'Current_Latitude_Label')
+		self.Current_Longitude_Label = self.findChild(QLabel, 'Current_Longitude_Label')
+		self.Elapsed_Time_Label = self.findChild(QLabel, 'Elapsed_Time_Label')
+		self.Waypoints_Reached_Label = self.findChild(QLabel, 'Waypoints_Reached_Label')
+		self.Total_Distance_Label = self.findChild(QLabel, 'Total_Distance_Label')
+		self.ETA_Label = self.findChild(QLabel, 'ETA_Label')
+		print("#################") 
+		widgets = self.findChild(QVBoxLayout,"MapViz_Layout")
+		print(widgets.objectName())
+		self.MapViz_Layout = self.findChild(QVBoxLayout,"MapViz_Layout")
 
-		self.Speed_Label = self.findChild(QLabel, 'Speed_Label')
-		self.Distance_Label = self.findChild(QLabel, 'Distance_Label')
-		self.Displacement_Label = self.findChild(QLabel, 'Displacement_Label')
-		self.Magnetic_Bearing_Label = self.findChild(QLabel, 'Magnetic_Bearing_Label')
-		self.Latitude_Label = self.findChild(QLabel, 'Latitude_Label')
-		self.Longitude_Label = self.findChild(QLabel, 'Longitude_Label')
-		self.Easting_Label = self.findChild(QLabel, 'Easting_Label')
-		self.Northing_Label = self.findChild(QLabel, 'Northing_Label')
+		self.View_Sensor_data_PushButton = self.findChild(QPushButton, 'View_Sensor_data_PushButton')
+		self.Sensors_Page_Back_PushButton = self.findChild(QPushButton, 'Sensors_Page_Back_PushButton')
 
-		self.Mapviz_Layout = self.findChild(QVBoxLayout, 'Mapviz_Layout')
+		self.View_Sensor_data_PushButton.clicked.connect(self.view_sensor_page)
+		self.Sensors_Page_Back_PushButton.clicked.connect(self.back_to_map_page)
 
-		self.Total_Steps_Label = self.findChild(QLabel, 'Total_Steps_Label')
+
+		self.RViz_Layout = self.findChild(QVBoxLayout, 'RViz_Layout')
 
 		self.scale_widgets()
 
@@ -114,12 +117,12 @@ class Window(QMainWindow):
 		screen_size = QApplication.primaryScreen().availableGeometry()
 
         # Design-time size
-		design_width = 1200
-		design_height = 900
+		design_width = 1300
+		design_height = 740
 
 		window_height = round(screen.size().height()*0.9)
-		window_width = round((window_height*1200)/900)
-		self.setFixedSize(window_width, window_height)
+		window_width = round((window_height*1300)/740)
+		# self.setFixedSize(window_width, window_height)
 
 		scale_factor = window_height/design_height  # Maintain aspect ratio
 
@@ -133,26 +136,6 @@ class Window(QMainWindow):
 			geom.setWidth(round(widget_width))
 			geom.setHeight(round(widget_height))
 			geom.moveTo(round(geom.x() * scale_factor), round(geom.y() * scale_factor))
-			##  Get Border Width from stylesheet
-			# if widget.objectName == "UserIDLineEdit" :
-			try:
-				if widget.objectName() == "UserIDLineEdit" or widget.objectName() == "PasswordLineEdit":
-					border_width = round(5*scale_factor)
-					border_radius = round(10*scale_factor)
-					css = qstylizer.style.StyleSheet()
-					css[f"QWidget#{widget.objectName()}"]["border-width"].setValue(f"{border_width}px")
-					css[f"QWidget#{widget.objectName()}"]["background-color"].setValue("transparent")
-					css[f"QWidget#{widget.objectName()}"]["border-style"].setValue("outset")
-					css[f"QWidget#{widget.objectName()}"]["border-color"].setValue("yellow")
-					css[f"QWidget#{widget.objectName()}"]["border-radius"].setValue(f"{border_radius}px")
-					css[f"QWidget#{widget.objectName()}"]["color"].setValue("yellow")
-					widget.setStyleSheet(css.toString())
-
-				# css = qstylizer.parser.parse(widget.styleSheet())
-				# print(css["QWidget#UserIDLineEdit"].borderWidth)
-
-			except Exception as e:
-				print(e)
 
 			widget.setGeometry(geom)
 
@@ -167,61 +150,12 @@ class Window(QMainWindow):
 	def distance_covered_callback(self, msg):
 		self.Distance_Label.setText(str(msg.data))
 
-	def displacement_callback(self, msg):
-		self.Displacement_Label.setText(str(msg.data))
-
 	def lat_long_callback(self, msg):
-		self.Latitude_Label.setText(str(round(msg.latitude,5)))
-		self.Longitude_Label.setText(str(round(msg.longitude,5)))
-	
-	def easting_northing_callback(self, msg):
-		self.Easting_Label.setText(str(msg.data[0]))
-		self.Northing_Label.setText(str(msg.data[1]))
-
-	def total_steps_callback(self, msg):
-		self.Total_Steps_Label.setText(str(msg.data))
-	
-
-	def magnetic_dir_callback(self, msg):
-		try: 
-			rotated_pixmap = self.magnetometer_direction_pixmap.transformed(QTransform().rotate(360.0-msg.data))
-			self.Current_Direction_Label.setPixmap(rotated_pixmap)
-			self.Magnetic_Bearing_Label.setText(str(int(360-msg.data)))
-		except Exception as e:
-			print(e)
-
-	def waypoint_dir_callback(self, msg):
-		try: 
-			rotated_pixmap = self.waypoint_direction_pixmap.transformed(QTransform().rotate(360.0-msg.data))
-			self.Waypoint_Direction_Label.setPixmap(rotated_pixmap)
-		except Exception as e:
-			print(e)
-
-
-	def clear_easting_northing(self):
-		self.Easting_Line_Edit.clear()
-		self.Northing_Line_Edit.clear()
-		self.Zone_Line_Edit.clear()
-
-	def clear_latitude_longitude(self):
-		self.Latitude_Line_Edit.clear()
-		self.Longitude_Line_Edit.clear()
+		self.Current_Latitude_Label.setText(str(round(msg.latitude,5)))
+		self.Current_Longitude_Label.setText(str(round(msg.longitude,5)))
 
 	def authenticate_user(self):
-		if str(self.UserIDLineEdit.text()) == "army" and str(self.PasswordLineEdit.text()) == "1234" :
-			for i in range(0,2):
-				self.Initializing_text.setText("Initializing")
-				self.Initializing_text.repaint()
-				rospy.sleep(0.2)
-				self.Initializing_text.setText("Initializing.")
-				self.Initializing_text.repaint()
-				rospy.sleep(0.2)
-				self.Initializing_text.setText("Initializing..")
-				self.Initializing_text.repaint()
-				rospy.sleep(0.2)
-				self.Initializing_text.setText("Initializing...")
-				self.Initializing_text.repaint()
-				rospy.sleep(0.2)
+		if str(self.Enter_Username_LineEdit.text()) == "army" and str(self.Enter_Password_LineEdit.text()) == "1234" :
 			self.stackedWidget.setCurrentIndex(1)
 
 		
@@ -232,8 +166,8 @@ class Window(QMainWindow):
 			yaml_data = yaml.safe_load(file)
 			latitude = yaml_data['local_xy_origins'][0]['latitude']
 			longitude = yaml_data['local_xy_origins'][0]['longitude']
-			self.Latitude_Line_Edit.setText(str(latitude))
-			self.Longitude_Line_Edit.setText(str(longitude))
+			self.Enter_Latitude_LineEdit.setText(str(latitude))
+			self.Enter_Longitude_LineEdit.setText(str(longitude))
 			file.close()
 		
 		with open(self.config_file_path, 'r') as file:
@@ -253,63 +187,36 @@ class Window(QMainWindow):
 		latitude = 0.0
 		longitude = 0.0
 
-		if self.Latitude_Line_Edit.text() == "" and self.Longitude_Line_Edit.text() == "":
+		if self.Enter_Latitude_LineEdit.text() != "" and self.Enter_Longitude_LineEdit.text() != "":
 
 			try:
-				e = float(self.Easting_Line_Edit.text())
-				n = float(self.Northing_Line_Edit.text())
-				z = int(self.Zone_Line_Edit.text())
-				s = float(self.Stride_Length_Line_Edit.text())
-			except Exception as exception:
-				print(exception)
-				return
-			if not (42 <=z <=47):
-				print("Zone Should be between 42 and 47")
-				return
-			
-			latitude_longitude = utm.to_latlon(easting=float(self.Easting_Line_Edit.text()), northing=float(self.Northing_Line_Edit.text()), zone_number=int(self.Zone_Line_Edit.text()), northern=True)
-			latitude = latitude_longitude[0]
-			longitude = latitude_longitude[1]
-
-			with open(self.initial_coordinates_file_path, 'w') as file:
-				coordinates_yaml_data['local_xy_origins'][0]['latitude'] = float(latitude)
-				coordinates_yaml_data['local_xy_origins'][0]['longitude'] = float(longitude)
-				yaml.dump(coordinates_yaml_data, file)
-
-		elif self.Easting_Line_Edit.text() == "" and self.Northing_Line_Edit.text() == "":
-
-			try:
-				f = float(self.Latitude_Line_Edit.text())
-				f = float(self.Longitude_Line_Edit.text())
-				i = float(self.Stride_Length_Line_Edit.text())
+				f = float(self.Enter_Latitude_LineEdit.text())
+				f = float(self.Enter_Longitude_LineEdit.text())
 			except Exception as e:
 				print(e)
 				return
 				
 			
-			latitude = float(self.Latitude_Line_Edit.text())
-			longitude = float(self.Longitude_Line_Edit.text())
+			latitude = float(self.Enter_Latitude_LineEdit.text())
+			longitude = float(self.Enter_Longitude_LineEdit.text())
 
 			with open(self.initial_coordinates_file_path, 'w') as file:
 				coordinates_yaml_data['local_xy_origins'][0]['latitude'] = float(latitude)
 				coordinates_yaml_data['local_xy_origins'][0]['longitude'] = float(longitude)
 				yaml.dump(coordinates_yaml_data, file)
 
-		with open(self.config_file_path, 'w') as file:
-			config_yaml_data['configuration'][0]['stride_length'] = float(self.Stride_Length_Line_Edit.text())
-			yaml.dump(config_yaml_data, file)
-
-		
-		# self.close()
+	def start_system(self):
 		self.stackedWidget.setCurrentIndex(2)
 		# self.roslaunch.start()
 
 		# rospy.sleep(10.0)
-		self.launch.start()
+		self.mapviz_launch.start()
+		self.rviz_launch.start()
 		rospy.loginfo("started")
 		rospy.sleep(6.0)
 		
 		mapviz_id = None
+		rviz_id = None
 		
 		while mapviz_id is None:
 			# Get the list of windows
@@ -320,31 +227,46 @@ class Window(QMainWindow):
 					mapviz_id = int(window.id, 16)
 					break
 
+		while rviz_id is None:
+			# Get the list of windows
+			list = wmctrl.Window.list()
+			#Find rviz window
+			for window in list:
+				if window.wm_class == 'rviz.rviz':
+					rviz_id = int(window.id, 16)
+					break
+
 		mapviz_window = QWindow.fromWinId(mapviz_id)
 		mapviz_window.show()
 
+		rviz_window = QWindow.fromWinId(rviz_id)
+		rviz_window.show()
+
 		# mapviz_window.show()
 		mapviz_window.setFlags(Qt.FramelessWindowHint)
+		# rviz_window.show()
+		rviz_window.setFlags(Qt.FramelessWindowHint)
 
 		mapviz_window.hide()
+		rviz_window.hide()
 		rospy.sleep(1.0)
 
 		mapviz_widget = QWidget.createWindowContainer(mapviz_window, self)
-		self.Mapviz_Layout.addWidget(mapviz_widget)
-		
+		rviz_widget = QWidget.createWindowContainer(rviz_window, self)
+		self.MapViz_Layout.addWidget(mapviz_widget)
+		self.RViz_Layout.addWidget(rviz_widget)
 
-		# rospy.spin()
-		# launch.shutdown()
+	def view_sensor_page(self):
+		self.stackedWidget.setCurrentIndex(3)
 
-	# def roslaunch_shutdown(self):
-	# 	try:
-	# 		self.launch.shutdown()
-	# 	except Exception as e:
-	# 		print(e)
+	def back_to_map_page(self):
+		self.stackedWidget.setCurrentIndex(2)
+
 
 	def __del__(self):
 		# try:
-			self.launch.shutdown()
+			self.mapviz_launch.shutdown()
+			self.rviz_launch.shutdown()
 		# except Exception as e:
 		# 	print(e)
 	

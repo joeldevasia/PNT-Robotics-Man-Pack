@@ -5,6 +5,7 @@
     <file>../assets/map_page.png</file>
   </qresource>
   <qresource prefix="Assets">
+    <file>../assets/Login_page_Graphic.png</file>
     <file>../assets/arrow-enter.png</file>
     <file>../assets/blue-direction.png</file>
     <file>../assets/logo.png</file>
