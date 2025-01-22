@@ -47,7 +47,7 @@ background-color: #4285F4;
 }</string>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="Login_Page">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -318,6 +318,9 @@ color: white
              </property>
              <property name="text">
               <string>Login</string>
+             </property>
+             <property name="shortcut">
+              <string>Return</string>
              </property>
             </widget>
            </item>

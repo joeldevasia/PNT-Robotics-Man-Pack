@@ -18,6 +18,7 @@ import wmctrl
 from PyQt5.QtGui import QWindow
 import qstylizer.parser
 import resources
+import time
 
 screen = None
 
@@ -40,19 +41,18 @@ class Window(QMainWindow):
 		width = round((height*1300)/740)
 		self.showMaximized()
 		# self.setFixedSize(width, height)
+
+		self.start_time = None
+		self.elapsed_time = None
 		
 		self.nda_bot_package_path = self.rospkg_path.get_path('nda_bot')
 		self.initial_coordinates_file_path = self.map_view_package_path+"/config/initial_coordinates.yaml"
 		self.config_file_path = self.nda_bot_package_path+"/config/config.yaml"
 
-		# self.magnetic_direction = rospy.Subscriber('/magnetic_dir_degrees', Float32, self.magnetic_dir_callback)
-		# self.waypoint_direction = rospy.Subscriber('/waypoint_dir_degrees', Float32, self.waypoint_dir_callback)
-		# self.distance_covered_sub = rospy.Subscriber('/distance', Float32, self.distance_covered_callback)
-		# self.displacement_sub = rospy.Subscriber('/displacement', Float32, self.displacement_callback)
-		# self.speed_sub = rospy.Subscriber('/speed', Float32, self.speed_callback)
-		# self.lat_long_sub = rospy.Subscriber('/navsat/fix', NavSatFix, self.lat_long_callback)
-		# self.easting_northing_sub = rospy.Subscriber('/easting_northing', Float32MultiArray, self.easting_northing_callback)
-		# self.totoal_steps_sub = rospy.Subscriber('/steps', Int32, self.total_steps_callback)																
+		self.magnetic_direction = rospy.Subscriber('/sensors/magnetometer', Int32, self.magnetic_direction_callback)
+		self.distance_covered_sub = rospy.Subscriber('/odom/distance', Int32, self.distance_covered_callback)
+		self.speed_sub = rospy.Subscriber('/odom/speed', Float32, self.speed_callback)
+		self.lat_long_sub = rospy.Subscriber('/navsat/fix', NavSatFix, self.lat_long_callback)
 
 		# self.magnetometer_direction_pixmap = QPixmap(self.map_view_package_path+"/assets/red-direction.png")
 		# self.waypoint_direction_pixmap = QPixmap(self.map_view_package_path+"/assets/white-direction.png")
@@ -73,19 +73,13 @@ class Window(QMainWindow):
 
 		self.Enter_Latitude_LineEdit = self.findChild(QLineEdit, 'Enter_Latitude_LineEdit')
 		self.Enter_Longitude_LineEdit = self.findChild(QLineEdit, 'Enter_Longitude_LineEdit')
-		# self.Easting_Line_Edit = self.findChild(QLineEdit, 'Easting_Line_Edit')
-		# self.Northing_Line_Edit = self.findChild(QLineEdit, 'Northing_Line_Edit')
-		# self.Zone_Line_Edit = self.findChild(QLineEdit, 'Zone_Line_Edit')
-		# self.Stride_Length_Line_Edit = self.findChild(QLineEdit, 'Stride_Length_Line_Edit')
 		self.Load_PushButton = self.findChild(QPushButton, 'Load_PushButton')
 		self.Save_PushButton = self.findChild(QPushButton, 'Save_PushButton')
 		self.Start_PushButton = self.findChild(QPushButton, 'Start_PushButton')
-		# self.Cancel_Button = self.findChild(QPushButton, 'Cancel_Button')
 
 		self.Load_PushButton.clicked.connect(self.load_parameters)
 		self.Save_PushButton.clicked.connect(self.save_parameters)
 		self.Start_PushButton.clicked.connect(self.start_system)
-		# self.Cancel_Button.clicked.connect(self.close)
 
 		self.Speed_Label = self.findChild(QLabel, 'Current_Speed_Label')
 		self.Distance_Label = self.findChild(QLabel, 'Distance_Covered_Label')
@@ -109,6 +103,9 @@ class Window(QMainWindow):
 
 
 		self.RViz_Layout = self.findChild(QVBoxLayout, 'RViz_Layout')
+
+		self.Enter_Username_LineEdit.setText("army")
+		self.Enter_Password_LineEdit.setText("1234")
 
 		self.scale_widgets()
 
@@ -143,6 +140,9 @@ class Window(QMainWindow):
 			font = widget.font()
 			font.setPointSizeF(font.pointSizeF() * scale_factor)
 			widget.setFont(font)
+ 
+	def magnetic_direction_callback(self, msg):
+		self.Current_Direction_Label.setText(str(msg.data))
 
 	def speed_callback(self, msg):
 		self.Speed_Label.setText(str(msg.data))
@@ -256,12 +256,20 @@ class Window(QMainWindow):
 		self.MapViz_Layout.addWidget(mapviz_widget)
 		self.RViz_Layout.addWidget(rviz_widget)
 
+		self.start_time = rospy.Time.now()
+		self.elapsed_time = rospy.Time.now()
+		self.time_timer = rospy.Timer(rospy.Duration(1), self.update_time)
+
 	def view_sensor_page(self):
 		self.stackedWidget.setCurrentIndex(3)
 
 	def back_to_map_page(self):
 		self.stackedWidget.setCurrentIndex(2)
-
+	
+	def update_time(self, timer):
+		self.elapsed_time = rospy.Time.now() - self.start_time
+		formated_time = time.strftime('%H:%M:%S', time.gmtime(self.elapsed_time.secs))
+		self.Elapsed_Time_Label.setText(str(formated_time))
 
 	def __del__(self):
 		# try:
@@ -269,7 +277,6 @@ class Window(QMainWindow):
 			self.rviz_launch.shutdown()
 		# except Exception as e:
 		# 	print(e)
-	
 
 # main method
 if __name__ == '__main__':

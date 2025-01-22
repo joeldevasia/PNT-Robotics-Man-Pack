@@ -37,8 +37,7 @@ class WaypointClass:
         self.x = 0
         self.y = 0
 
-magnetic_direction = Imu()
-magnetic_direction.orientation.w = 1
+magnetic_direction = Int32()
 
 waypoint = NavSatFix()
 
@@ -76,7 +75,7 @@ base_link_broadcaster = tf.TransformBroadcaster()
 
 def magnetometer_callback(msg):
     global magnetic_direction
-    magnetic_direction.orientation = msg.orientation
+    magnetic_direction.data = msg.data
 
 
 def gps_callback(msg):
@@ -328,7 +327,7 @@ odom_pub = rospy.Publisher("/odom", Odometry, queue_size=10)
 def main():
     rospy.init_node("waypoint_dir_node")
 
-    rospy.Subscriber("/magnetometer", Imu, magnetometer_callback)
+    rospy.Subscriber("sensors/magnetometer", Int32, magnetometer_callback)
     gps_sub = rospy.Subscriber("/raw_gps", NavSatFix, gps_callback)
     waypoint_sub = rospy.Subscriber("/mapviz/waypoint", PointStamped, waypoint_callback)
     waypoint_dir_degrees_pub = rospy.Publisher('/waypoint_dir_degrees', Float32, queue_size=10)

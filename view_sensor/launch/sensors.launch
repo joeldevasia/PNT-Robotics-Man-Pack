@@ -1,12 +1,12 @@
 <launch>
   roslaunch realsense2_camera rs_camera.launch filters:=pointcloud align_depth:=true
 
-  <include file="$(find manpack_rplidar_ros)/launch/rplidar.launch"/>
-  <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+  <!-- <include file="$(find manpack_rplidar_ros)/launch/rplidar.launch"/> -->
+  <!-- <include file="$(find realsense2_camera)/launch/rs_camera.launch"> -->
     <!-- <arg name="filters" value="pointcloud"/> -->
     <!-- <arg name="align_depth" value="true"/> -->
    <!-- <arg name="initial_reset" value="true"/> -->
-  </include>
+  <!-- </include> -->
 
   <node pkg="rviz" type="rviz" name="rviz" args="-d $(find view_sensor)/rviz/view_depth_lidar.rviz"></node>
   <node pkg="tf" type="static_transform_publisher" name="laser_frame"
