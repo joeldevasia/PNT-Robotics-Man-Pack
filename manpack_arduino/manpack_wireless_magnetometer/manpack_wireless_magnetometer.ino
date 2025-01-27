@@ -75,7 +75,7 @@ void loop() {
   readSensorData();
   magnetometer_pub.publish(&magnetic_heading);
   nh.spinOnce();
-  delay(10);
+  delay(500);
 }
 
 void readSensorData() {
