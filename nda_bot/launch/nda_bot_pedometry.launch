@@ -5,9 +5,11 @@
     <param name="baud" value="57600" />
   </node> -->
 
-  <node name="serial_node" pkg="rosserial_python" type="serial_node.py">
+  <!-- <node name="serial_node" pkg="rosserial_python" type="serial_node.py">
     <param name="port" value="tcp" />
-  </node>
+  </node> -->
+
+  <include file="$(find rosserial_server)/launch/socket.launch"/>
 
   <!-- <node pkg="nda_bot" type="calculate_pedometry.py" name="calculate_pedometry" output="screen"></node> -->
 
