@@ -184,16 +184,21 @@ class Window(QMainWindow):
 
 	def magnetic_dir_callback(self, msg):
 		try: 
-			rotated_pixmap = self.magnetometer_direction_pixmap.transformed(QTransform().rotate(360.0-msg.data))
-			self.Current_Direction_Label.setPixmap(rotated_pixmap)
+			self.rotated_pixmap_mag = self.magnetometer_direction_pixmap.transformed(QTransform().rotate(360.0-msg.data))
+			self.Current_Direction_Label.setPixmap(self.rotated_pixmap_mag)
+			QtGui.QGuiApplication.processEvents()
 			self.Magnetic_Bearing_Label.setText(str(int(360-msg.data+90)))
+			QWidget.update(self.Current_Direction_Label)
+			QWidget.update(self.Magnetic_Bearing_Label)
 		except Exception as e:
 			print(e)
 
 	def waypoint_dir_callback(self, msg):
 		try: 
-			rotated_pixmap = self.waypoint_direction_pixmap.transformed(QTransform().rotate(360.0-msg.data))
-			self.Waypoint_Direction_Label.setPixmap(rotated_pixmap)
+			self.rotated_pixmap_way = self.waypoint_direction_pixmap.transformed(QTransform().rotate(360.0-msg.data))
+			self.Waypoint_Direction_Label.setPixmap(self.rotated_pixmap_way)
+			QtGui.QGuiApplication.processEvents()
+			QWidget.update(self.Waypoint_Direction_Label)
 		except Exception as e:
 			print(e)
 
