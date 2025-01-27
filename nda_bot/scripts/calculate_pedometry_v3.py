@@ -50,10 +50,16 @@ class CalculatePedomtery:
         self.distance_pub = rospy.Publisher("/odom/distance", Int32, queue_size=10)
         self.speed_pub = rospy.Publisher("/odom/speed", Float32, queue_size=10)
         self.navsat_pub = rospy.Publisher("/navsat/fix", NavSatFix, queue_size=10)
+        self.easting_northing_pub = rospy.Publisher("/easting_northing", Float32MultiArray, queue_size=10)
+        self.displacement_pub = rospy.Publisher("/displacement", String, queue_size=10)
+        self.steps_pub = rospy.Publisher("/steps", Int32, queue_size=10)
 
         # rospy.sleep(5)
         self.rate = rospy.Rate(10)
         self.odom = Odometry()
+        self.odom.pose.pose.position.x = 0
+        self.odom.pose.pose.position.y = 0
+        self.odom.pose.pose.position.z = 0
         self.navsat = NavSatFix()
         print("Waiting for Origin")
         rospy.wait_for_message("/local_xy_origin", PoseStamped)
@@ -77,7 +83,7 @@ class CalculatePedomtery:
     def start(self):
         while not rospy.is_shutdown():
             if self.steps > self.previous_steps:
-                self.total_steps += self.steps - self.previous_steps
+                self.total_steps += (self.steps - self.previous_steps)
 
                 d_x = self.stride_length * cos(np.radians(self.magnetic_direction))
                 d_y = self.stride_length * sin(np.radians(self.magnetic_direction))
@@ -85,7 +91,7 @@ class CalculatePedomtery:
                 self.odom.header.frame_id = "odom"
 
                 self.odom.pose.pose.position.x += d_x*(self.steps - self.previous_steps)
-                self.odom.pose.pose.position.y +=d_y*(self.steps - self.previous_steps)
+                self.odom.pose.pose.position.y += d_y*(self.steps - self.previous_steps)
                 self.odom.pose.pose.orientation = np.radians(self.magnetic_direction)
 
                 self.previous_steps = self.steps
@@ -111,8 +117,19 @@ class CalculatePedomtery:
                 self.previous_time_for_speed = rospy.get_time()
                 self.speed_pub.publish(round(speed, 2))
                 self.distance_pub.publish(round(self.distance))
+            displacement = sqrt(self.odom.pose.pose.position.x**2 + self.odom.pose.pose.position.y**2)
+            displacement = displacement/1000
+            self.displacement_pub.publish(f"{displacement:.2f}")
 
-            self.odom_pub.publish(self.odom)
+            easting_northing = utm.from_latlon(latitude=latitude if latitude != 0.0 else self.initial_lat, longitude=longitude if longitude != 0.0 else self.initial_lon)
+            print("Latitude: ", latitude, "Longitude: ", longitude)
+            print(easting_northing)
+            easting_northing_msg = Float32MultiArray()
+            easting_northing_msg.data = [round(easting_northing[0]), round(easting_northing[1])]
+            self.easting_northing_pub.publish(easting_northing_msg)
+
+            # print("ODOM:", self.odom)
+            # self.odom_pub.publish(self.odom)
 
             quaternion = quaternion_from_euler(0, 0, np.radians(self.magnetic_direction))
 

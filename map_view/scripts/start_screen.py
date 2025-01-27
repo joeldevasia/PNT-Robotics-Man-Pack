@@ -10,7 +10,7 @@ import roslaunch
 from PyQt5 import uic
 import utm
 import threading
-from std_msgs.msg import Float32, Int32, Float32MultiArray
+from std_msgs.msg import Float32, Int32, Float32MultiArray, String
 from PyQt5.QtGui import QIcon, QPixmap, QTransform
 from sensor_msgs.msg import NavSatFix
 from PyQt5 import QtGui
@@ -43,10 +43,10 @@ class Window(QMainWindow):
 		self.initial_coordinates_file_path = self.map_view_package_path+"/config/initial_coordinates.yaml"
 		self.config_file_path = self.nda_bot_package_path+"/config/config.yaml"
 
-		self.magnetic_direction = rospy.Subscriber('/magnetic_dir_degrees', Float32, self.magnetic_dir_callback)
+		self.magnetic_direction = rospy.Subscriber('/sensors/magnetometer', Int32, self.magnetic_dir_callback)
 		self.waypoint_direction = rospy.Subscriber('/waypoint_dir_degrees', Float32, self.waypoint_dir_callback)
 		self.distance_covered_sub = rospy.Subscriber('/distance', Float32, self.distance_covered_callback)
-		self.displacement_sub = rospy.Subscriber('/displacement', Float32, self.displacement_callback)
+		self.displacement_sub = rospy.Subscriber('/displacement', String, self.displacement_callback)
 		self.speed_sub = rospy.Subscriber('/speed', Float32, self.speed_callback)
 		self.lat_long_sub = rospy.Subscriber('/navsat/fix', NavSatFix, self.lat_long_callback)
 		self.easting_northing_sub = rospy.Subscriber('/easting_northing', Float32MultiArray, self.easting_northing_callback)
@@ -186,7 +186,7 @@ class Window(QMainWindow):
 		try: 
 			rotated_pixmap = self.magnetometer_direction_pixmap.transformed(QTransform().rotate(360.0-msg.data))
 			self.Current_Direction_Label.setPixmap(rotated_pixmap)
-			self.Magnetic_Bearing_Label.setText(str(int(360-msg.data)))
+			self.Magnetic_Bearing_Label.setText(str(int(360-msg.data+90)))
 		except Exception as e:
 			print(e)
 
