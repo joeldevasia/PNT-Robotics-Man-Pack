@@ -18,10 +18,10 @@ import yaml
 import math
 import rospkg
 import utm
+from show_waypoints import haversine_distance
+from swri_transform_util.wgs84_transformer import Wgs84Transformer
 
 base_link_broadcaster = tf.TransformBroadcaster()
-
-origin = NavSatFix()
 
 class CalculatePedomtery:
     def __init__(self):
@@ -30,8 +30,9 @@ class CalculatePedomtery:
         yaml_data = yaml.load(open(rospack.get_path('nda_bot')+"/config/config.yaml"), Loader=yaml.FullLoader)
         self.stride_length = yaml_data['configuration'][0]['stride_length']
         self.magnetic_direction = 0
-        self.initial_lat = 0.0
-        self.initial_lon = 0.0  
+        self.origin = None
+        self.initial_lat = None
+        self.initial_lon = None
         self.latitude = 0.0
         self.longitude = 0.0
         self.distance = 0
@@ -47,15 +48,15 @@ class CalculatePedomtery:
         rospy.Subscriber("/sensors/step_counter", Int32, self.steps_counter_callback)
         local_xy_origin_sub = rospy.Subscriber("/local_xy_origin", PoseStamped, self.local_origin_callback)
         self.odom_pub = rospy.Publisher("/odom", Odometry, queue_size=10)
-        self.distance_pub = rospy.Publisher("/odom/distance", Int32, queue_size=10)
-        self.speed_pub = rospy.Publisher("/odom/speed", Float32, queue_size=10)
+        self.distance_pub = rospy.Publisher("/odom/distance", String, queue_size=10)
+        self.speed_pub = rospy.Publisher("/odom/speed", String, queue_size=10)
         self.navsat_pub = rospy.Publisher("/navsat/fix", NavSatFix, queue_size=10)
         self.easting_northing_pub = rospy.Publisher("/easting_northing", Float32MultiArray, queue_size=10)
         self.displacement_pub = rospy.Publisher("/displacement", String, queue_size=10)
         self.steps_pub = rospy.Publisher("/steps", Int32, queue_size=10)
 
         # rospy.sleep(5)
-        self.rate = rospy.Rate(10)
+        self.rate = rospy.Rate(5)
         self.odom = Odometry()
         self.odom.pose.pose.position.x = 0
         self.odom.pose.pose.position.y = 0
@@ -75,6 +76,7 @@ class CalculatePedomtery:
         global origin_received
         self.initial_lat = msg.pose.position.y
         self.initial_lon = msg.pose.position.x
+        self.origin = msg
 
     def steps_counter_callback(self, msg):
         self.steps = msg.data
@@ -96,7 +98,9 @@ class CalculatePedomtery:
 
                 self.previous_steps = self.steps
 
-            self.distance = self.total_steps*(self.stride_length/2)
+                self.steps_pub.publish(self.total_steps)
+
+            self.distance = self.total_steps*(self.stride_length)
 
             latitude = self.initial_lat + ((self.odom.pose.pose.position.y / 1000) / 6378.137) * (
                 180 / pi
@@ -111,30 +115,35 @@ class CalculatePedomtery:
             self.navsat.altitude = 0
             self.navsat_pub.publish(self.navsat)
 
-            if (round(self.distance*10)%100) == 0:
-                speed = ((self.distance - self.previous_distance)*(self.stride_length/2)) / (rospy.get_time() - self.previous_time_for_speed)
+            if self.distance-self.previous_distance >=5:
+                speed = ((self.distance - self.previous_distance)*(self.stride_length)) / (rospy.get_time() - self.previous_time_for_speed)
                 self.previous_distance = self.distance
                 self.previous_time_for_speed = rospy.get_time()
-                self.speed_pub.publish(round(speed, 2))
-                self.distance_pub.publish(round(self.distance))
-            displacement = sqrt(self.odom.pose.pose.position.x**2 + self.odom.pose.pose.position.y**2)
-            displacement = displacement/1000
-            self.displacement_pub.publish(f"{displacement:.2f}")
+                self.speed_pub.publish(f"{round(speed*3.6, 3):.3f}")
+                self.distance_pub.publish(f"{round(self.distance/1000, 3):.3f}")
+                # displacement = sqrt(self.odom.pose.pose.position.x**2 + self.odom.pose.pose.position.y**2)
+                print("Initial Lat: ", self.initial_lat, "Initial Lon: ", self.initial_lon)
+                print("Current Lat: ", latitude, "Current Lon: ", longitude)
+                displacement = haversine_distance(self.initial_lat, self.initial_lon, latitude, longitude)
+                print("Displacement: ", displacement)
+                displacement = displacement/1000
+                self.displacement_pub.publish(f"{round(displacement,4):.3f}")
 
             easting_northing = utm.from_latlon(latitude=latitude if latitude != 0.0 else self.initial_lat, longitude=longitude if longitude != 0.0 else self.initial_lon)
-            print("Latitude: ", latitude, "Longitude: ", longitude)
-            print(easting_northing)
+            # print("Latitude: ", latitude, "Longitude: ", longitude)
+            # print(easting_northing)
             easting_northing_msg = Float32MultiArray()
             easting_northing_msg.data = [round(easting_northing[0]), round(easting_northing[1])]
             self.easting_northing_pub.publish(easting_northing_msg)
 
             # print("ODOM:", self.odom)
             # self.odom_pub.publish(self.odom)
-
+            wgs = Wgs84Transformer(local_origin=self.origin)
+            (x, y) = Wgs84Transformer.wgs84_to_local_xy(wgs, (self.navsat.latitude, self.navsat.longitude))
             quaternion = quaternion_from_euler(0, 0, np.radians(self.magnetic_direction))
 
             base_link_broadcaster.sendTransform(
-                (self.odom.pose.pose.position.x, self.odom.pose.pose.position.y, 0),
+                (x, y, 0),
                 (
                     quaternion[0],
                     quaternion[1],
