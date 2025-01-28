@@ -91,7 +91,6 @@ class CalculatePedomtery:
                 d_y = (self.stride_length/2) * sin(np.radians(self.magnetic_direction))
 
                 self.odom.header.frame_id = "odom"
-
                 self.odom.pose.pose.position.x += d_x*(self.steps - self.previous_steps)
                 self.odom.pose.pose.position.y += d_y*(self.steps - self.previous_steps)
                 self.odom.pose.pose.orientation = np.radians(self.magnetic_direction)
