@@ -87,8 +87,8 @@ class CalculatePedomtery:
             if self.steps > self.previous_steps:
                 self.total_steps += (self.steps - self.previous_steps)
 
-                d_x = self.stride_length * cos(np.radians(self.magnetic_direction))
-                d_y = self.stride_length * sin(np.radians(self.magnetic_direction))
+                d_x = (self.stride_length/2) * cos(np.radians(self.magnetic_direction))
+                d_y = (self.stride_length/2) * sin(np.radians(self.magnetic_direction))
 
                 self.odom.header.frame_id = "odom"
 
@@ -100,7 +100,7 @@ class CalculatePedomtery:
 
                 self.steps_pub.publish(self.total_steps)
 
-            self.distance = self.total_steps*(self.stride_length)
+            self.distance = self.total_steps*(self.stride_length/2)
 
             latitude = self.initial_lat + ((self.odom.pose.pose.position.y / 1000) / 6378.137) * (
                 180 / pi
@@ -116,7 +116,7 @@ class CalculatePedomtery:
             self.navsat_pub.publish(self.navsat)
 
             if self.distance-self.previous_distance >=5:
-                speed = ((self.distance - self.previous_distance)*(self.stride_length)) / (rospy.get_time() - self.previous_time_for_speed)
+                speed = ((self.distance - self.previous_distance)*(self.stride_length/2)) / (rospy.get_time() - self.previous_time_for_speed)
                 self.previous_distance = self.distance
                 self.previous_time_for_speed = rospy.get_time()
                 self.speed_pub.publish(f"{round(speed*3.6, 3):.3f}")
