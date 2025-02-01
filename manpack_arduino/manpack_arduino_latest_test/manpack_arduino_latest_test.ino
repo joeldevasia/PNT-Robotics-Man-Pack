@@ -37,40 +37,6 @@ const float mag_decl = -0.0333;
 
 Adafruit_MLX90393 mlx = Adafruit_MLX90393();
 
-void recoverI2CBus() {
-  // Disable the Wire interface temporarily.
-  Wire.end();
-  
-  // Configure SCL and SDA as GPIO outputs.
-  pinMode(SCL, OUTPUT);
-  pinMode(SDA, OUTPUT);
-
-  // Generate clock pulses on SCL.
-  for (int i = 0; i < 9; i++) { // 9 pulses to release a stuck slave
-    digitalWrite(SCL, HIGH);
-    delayMicroseconds(5);
-    digitalWrite(SCL, LOW);
-    delayMicroseconds(5);
-  }
-  
-  // Generate a STOP condition: SDA low, then high while SCL is high.
-  digitalWrite(SDA, LOW);
-  digitalWrite(SCL, HIGH);
-  delayMicroseconds(5);
-  digitalWrite(SDA, HIGH);
-  delayMicroseconds(5);
-  
-  // Reinitialize the Wire library.
-  Wire.begin();
-  
-  Serial.println("I2C bus recovered");
-}
-
-bool isDevicePresent() {
-  Wire.beginTransmission(STEP_COUNTER_ADDRESS);
-  byte error = Wire.endTransmission();
-  return (error == 0);
-}
 
 void setup() {
   Serial.begin(57600);
@@ -101,20 +67,14 @@ void setup() {
 }
 
 void loop() {
-  if (!isDevicePresent()) {
-    Serial.println("I2C device not responding!");
-    // Try to recover or avoid calling the library functions
-    // recoverI2CBus();  // Optionally call your bus recovery routine
-  } else {
-    // Now safe to use the step counters library functions
-    readSensorData();
-    magnetometer_pub.publish(&magnetic_heading);
-    steps_pub.publish(&steps);
-  }
+  readSensorData();
+  magnetometer_pub.publish(&magnetic_heading);
+  steps_pub.publish(&steps);
+
   nh.spinOnce();
 
   delay(10);
-  // wdt_reset();
+  wdt_reset();
 }
 
 void readSensorData() {
