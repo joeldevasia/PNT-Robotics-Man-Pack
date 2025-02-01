@@ -72,9 +72,14 @@ void setup() {
 }
 
 void loop() {
-  readSensorData();
-  magnetometer_pub.publish(&magnetic_heading);
-  nh.spinOnce();
+  if (nh.connected()) {
+    readSensorData();
+    magnetometer_pub.publish(&magnetic_heading);
+    nh.spinOnce();
+    Serial.println("Connected");
+  } else {
+    Serial.println("Not Connected");
+  }
   delay(500);
 }
 
