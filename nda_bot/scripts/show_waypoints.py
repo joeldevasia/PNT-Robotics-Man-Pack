@@ -37,7 +37,8 @@ class WaypointClass:
         self.x = 0
         self.y = 0
 
-magnetic_direction = Int32()
+magnetic_direction = Imu()
+magnetic_direction.orientation.w = 1
 
 waypoint = NavSatFix()
 
@@ -75,7 +76,7 @@ base_link_broadcaster = tf.TransformBroadcaster()
 
 def magnetometer_callback(msg):
     global magnetic_direction
-    magnetic_direction.data = msg.data
+    magnetic_direction.orientation = msg.orientation
 
 
 def gps_callback(msg):
@@ -101,7 +102,7 @@ def waypoint_callback(msg):
     waypoint.latitude = msg.point.y
     waypoint.longitude = msg.point.x
     if len(waypoint_list) >0:
-        distance = haversine_distance(radians(waypoint_list[-1].latitude), radians(waypoint_list[-1].longitude), radians(waypoint.latitude), radians(waypoint.longitude))
+        distance = haversine_distance(waypoint_list[-1].latitude, waypoint_list[-1].longitude, waypoint.latitude, waypoint.longitude)
         waypoint.distance_from_previous_waypoint = distance
         if distance < 10:
             print("Removing Last Waypoint, ID: ", waypoint_list[-1].id)
@@ -110,7 +111,7 @@ def waypoint_callback(msg):
             waypoint_counter -= 1
             return
     else:
-        distance = haversine_distance(radians(navsat.latitude), radians(navsat.longitude), radians(waypoint.latitude),radians(waypoint.longitude), return_in_meters=True)
+        distance = haversine_distance(navsat.latitude, navsat.longitude, waypoint.latitude,waypoint.longitude, return_in_meters=True)
         waypoint.distance_from_previous_waypoint = distance
     print("ID: ", waypoint.id, "Lat: ", waypoint.latitude, "Lon: ", waypoint.longitude)
     wgs = Wgs84Transformer(local_origin=origin)
@@ -181,7 +182,7 @@ def pub_waypoint_line(id, action = Marker.ADD, point = Point(x=0, y=0)):
     waypoint_line.pose.orientation.y = 0.0
     waypoint_line.pose.orientation.z = 0.0
     waypoint_line.pose.orientation.w = 1.0
-    waypoint_line.scale.x = 0.1
+    waypoint_line.scale.x = 0.5
     waypoint_line.color.a = 1.0
     waypoint_line.color.r = 0.5
     waypoint_line.color.g = 0.5
@@ -208,15 +209,15 @@ def pub_waypoint_distance_text(id, action = Marker.ADD, point = Point(x=0, y=0))
     distance_text.type = Marker.TEXT_VIEW_FACING
     distance_text.action = action
     if id == waypoint_list[0].id:
-        lat1 = radians(navsat.latitude)
-        lat2 = radians(waypoint_list[0].latitude)
-        lon1 = radians(navsat.longitude)
-        lon2 = radians(waypoint_list[0].longitude)
+        lat1 = navsat.latitude
+        lat2 = waypoint_list[0].latitude
+        lon1 = navsat.longitude
+        lon2 = waypoint_list[0].longitude
     else:
-        lat1 = radians(waypoint_list[-2].latitude)
-        lat2 = radians(waypoint_list[-1].latitude)
-        lon1 = radians(waypoint_list[-2].longitude)
-        lon2 = radians(waypoint_list[-1].longitude)
+        lat1 = waypoint_list[-2].latitude
+        lat2 = waypoint_list[-1].latitude
+        lon1 = waypoint_list[-2].longitude
+        lon2 = waypoint_list[-1].longitude
     # print("lat1: ", lat1, "lon1: ", lon1, "lat2: ", lat2, "lon2: ", lon2)
     distance_text.text=str(round(haversine_distance(lat1, lon1, lat2, lon2, return_in_meters=True),2))+"m"
     if id == waypoint_list[0].id:
@@ -287,9 +288,9 @@ def pub_waypoint_total_distance_text():
     # print("Marker "+str(id)+" Added" if action == Marker.ADD else "Removed")
 
 
-
-
 def haversine_distance(lat1, lon1, lat2, lon2, return_in_meters=True):
+    ''' Input in degrees only '''
+
     # R = 6378.137; # Radius of earth in KM
     # dLat = lat2 * pi / 180 - lat1 * pi / 180
     # dLon = lon2 * pi / 180 - lon1 * pi / 180
@@ -297,12 +298,7 @@ def haversine_distance(lat1, lon1, lat2, lon2, return_in_meters=True):
     # c = 2 * atan2(sqrt(a), sqrt(1-a))
     # d = R * c
     # return d * 1000 # meters
-    lat1 = lat1 * 180/pi
-    lat2 = lat2 * 180/pi
-    lon1 = lon1 * 180/pi
-    lon2 = lon2 * 180/pi
     latMid = (lat1+lat2 )/2.0;  # or just use Lat1 for slightly less accurate estimate
-
 
     m_per_deg_lat = 111132.954 - 559.822 * cos( 2.0 * latMid ) + 1.175 * cos( 4.0 * latMid)
     m_per_deg_lon = (3.14159265359/180 ) * 6367449 * cos ( latMid )
@@ -327,7 +323,7 @@ odom_pub = rospy.Publisher("/odom", Odometry, queue_size=10)
 def main():
     rospy.init_node("waypoint_dir_node")
 
-    rospy.Subscriber("sensors/magnetometer", Int32, magnetometer_callback)
+    rospy.Subscriber("/magnetometer", Imu, magnetometer_callback)
     gps_sub = rospy.Subscriber("/raw_gps", NavSatFix, gps_callback)
     waypoint_sub = rospy.Subscriber("/mapviz/waypoint", PointStamped, waypoint_callback)
     waypoint_dir_degrees_pub = rospy.Publisher('/waypoint_dir_degrees', Float32, queue_size=10)
@@ -372,7 +368,10 @@ def main():
             except Exception as e:
                 print(e)
             # print("Bearing: ", bearing)
-
+            lat1 = np.degrees(lat1)
+            lon1 = np.degrees(lon1)
+            lat2 = np.degrees(lat2)
+            lon2 = np.degrees(lon2)
             distance = haversine_distance(lat1, lon1, lat2, lon2)
             # print("Distance: ", distance)
             if distance < 10:

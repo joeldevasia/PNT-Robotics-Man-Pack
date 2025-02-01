@@ -1,19 +1,19 @@
 <launch>
 
-  <!-- <node name="serial_node" pkg="rosserial_arduino" type="serial_node.py">
+  <node name="serial_node" pkg="rosserial_arduino" type="serial_node.py">
     <param name="port" value="/dev/ttyACM0" />
     <param name="baud" value="57600" />
-  </node> -->
+  </node>
 
   <!-- <node name="serial_node" pkg="rosserial_python" type="serial_node.py">
     <param name="port" value="tcp" />
   </node> -->
 
-  <include file="$(find rosserial_server)/launch/socket.launch"/>
+  <!-- <include file="$(find rosserial_server)/launch/socket.launch"/> -->
 
   <!-- <node pkg="nda_bot" type="calculate_pedometry.py" name="calculate_pedometry" output="screen"></node> -->
 
-  <node pkg="nda_bot" type="calculate_pedometry_v2.py" name="calculate_pedometry_v2" output="screen"></node>
+  <node pkg="nda_bot" type="calculate_pedometry_v3.py" name="calculate_pedometry_v3" output="screen"></node>
   <node pkg="nda_bot" type="show_waypoints.py" name="show_waypoints" output="screen"></node>
    <!-- <node pkg="nda_bot" type="get_magnetometer_HIMU.py" name="get_magnetometer_HIMU" output="screen"></node> -->
    <!-- <node pkg="nda_bot" type="show_magnetic_compass_gui.py" name="show_magnetic_compass_gui" output="screen"></node> -->

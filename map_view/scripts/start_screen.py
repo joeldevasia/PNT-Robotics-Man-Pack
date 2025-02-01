@@ -10,7 +10,7 @@ import roslaunch
 from PyQt5 import uic
 import utm
 import threading
-from std_msgs.msg import Float32, Int32, Float32MultiArray
+from std_msgs.msg import Float32, Int32, Float32MultiArray, String
 from PyQt5.QtGui import QIcon, QPixmap, QTransform
 from sensor_msgs.msg import NavSatFix
 from PyQt5 import QtGui
@@ -50,8 +50,8 @@ class Window(QMainWindow):
 		self.config_file_path = self.nda_bot_package_path+"/config/config.yaml"
 
 		self.magnetic_direction = rospy.Subscriber('/sensors/magnetometer', Int32, self.magnetic_direction_callback)
-		self.distance_covered_sub = rospy.Subscriber('/odom/distance', Int32, self.distance_covered_callback)
-		self.speed_sub = rospy.Subscriber('/odom/speed', Float32, self.speed_callback)
+		self.distance_covered_sub = rospy.Subscriber('/odom/distance', String, self.distance_covered_callback)
+		self.speed_sub = rospy.Subscriber('/odom/speed', String, self.speed_callback)
 		self.lat_long_sub = rospy.Subscriber('/navsat/fix', NavSatFix, self.lat_long_callback)
 
 		# self.magnetometer_direction_pixmap = QPixmap(self.map_view_package_path+"/assets/red-direction.png")
