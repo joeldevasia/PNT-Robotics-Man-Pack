@@ -113,7 +113,7 @@ class Window(QMainWindow):
 
 		self.scale_widgets()
 		# oskb phoney-us phoney-de --width 480 --center --start minimized
-		self.osk_command = ["oskb", "phoney-us", "phoney-de", "--width", "480", "--center", "--start", "minimized"]
+		self.osk_command = ["oskb", "phoney-us", "phoney-de"]
 		self.osk_process = QProcess(self)  # Parent to the window
 		self.line_edits = [] # List to store all QLineEdit widgets
 
