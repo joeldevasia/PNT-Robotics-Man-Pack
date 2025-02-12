@@ -45,7 +45,7 @@ class Window(QMainWindow):
 		self.mapserver_docker_process = subprocess.Popen(command, shell=True)
 
 		# docker run -it --rm -e DISPLAY --network host --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -v /etc/localtime:/etc/localtime:ro --name manpack_container pnt/manpack:latest
-		self.manpack_docker_process = subprocess.Popen(["docker", "run", "-it", "--rm", "-e", "DISPLAY", "--network", "host", "--privileged", "-v", "/tmp/.X11-unix:/tmp/.X11-unix", "-v", "/etc/localtime:/etc/localtime:ro", "--name", "manpack_container", "pnt/manpack:latest", "/bin/bash", "-c", "source /opt/ros/noetic/setup.bash && cd home && source /home/manpack_ws/devel/setup.bash && roslaunch map_view start_system.launch"])
+		self.manpack_docker_process = subprocess.Popen(["docker", "run", "-it", "--rm", "-e", "DISPLAY","--pid","host", "--network", "host", "--privileged", "-v", "/tmp/.X11-unix:/tmp/.X11-unix", "-v", "/etc/localtime:/etc/localtime:ro", "--name", "manpack_container", "pnt/manpack:latest", "/bin/bash", "-c", "source /opt/ros/noetic/setup.bash && cd home && source /home/manpack_ws/devel/setup.bash && roslaunch map_view start_system.launch"])
 
 		mapviz_id = None
 		
@@ -58,17 +58,17 @@ class Window(QMainWindow):
 					mapviz_id = int(window.id, 16)
 					break
 
-		mapviz_window = QWindow.fromWinId(mapviz_id)
-		mapviz_window.show()
-
+		# mapviz_window = QWindow.fromWinId(mapviz_id)
 		# mapviz_window.show()
-		mapviz_window.setFlags(Qt.FramelessWindowHint)
 
-		mapviz_window.hide()
-		rospy.sleep(1.0)
+		# # mapviz_window.show()
+		# mapviz_window.setFlags(Qt.FramelessWindowHint)
 
-		mapviz_widget = QWidget.createWindowContainer(mapviz_window, self)
-		self.setCentralWidget(mapviz_widget)
+		# mapviz_window.hide()
+		# rospy.sleep(1.0)
+
+		# mapviz_widget = QWidget.createWindowContainer(mapviz_window, self)
+		# self.setCentralWidget(mapviz_widget)
 
 		# self.Mapviz_Layout.addWidget(mapviz_widget)
 
@@ -76,7 +76,7 @@ class Window(QMainWindow):
 		# self.docker_process.terminate()
 		self.manpack_docker_process.kill()
 		self.mapserver_docker_process.kill()
-		subprocess.Popen(["docker", "commit", "manpack_container", "pnt/manpack:latest"])
+		# subprocess.Popen(["docker", "commit", "manpack_container", "pnt/manpack:latest"])
 		subprocess.Popen(["docker", "kill", "manpack_container"]) 
 		subprocess.Popen(["docker", "kill", "mapserver_container"])
 
@@ -87,7 +87,7 @@ if __name__ == "__main__":
 	app.setWindowIcon(QtGui.QIcon(":/Assets/logo.png"))
 	screen = app.primaryScreen()
 	window = Window()
-	window.show()
+	# window.show()
 	app.exec()
 	subprocess.Popen(["docker", "commit", "manpack_container", "pnt/manpack:latest"])
 	subprocess.Popen(["docker", "kill", "manpack_container"])
