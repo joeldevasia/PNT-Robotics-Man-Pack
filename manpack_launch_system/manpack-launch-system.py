@@ -89,7 +89,7 @@ if __name__ == "__main__":
 	window = Window()
 	# window.show()
 	app.exec()
-	subprocess.Popen(["docker", "commit", "manpack_container", "pnt/manpack:latest"])
+	# subprocess.Popen(["docker", "commit", "manpack_container", "pnt/manpack:latest"])
 	subprocess.Popen(["docker", "kill", "manpack_container"])
 	subprocess.Popen(["docker", "kill", "mapserver_container"])
 	sys.exit()
