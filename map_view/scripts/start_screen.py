@@ -18,6 +18,7 @@ import wmctrl
 from PyQt5.QtGui import QWindow
 import qstylizer.parser
 import resources
+from PyQt5.QtCore import QProcess, QEvent
 
 screen = None
 
@@ -28,6 +29,9 @@ class Window(QMainWindow):
 	# constructor
 	def __init__(self):
 		QMainWindow.__init__(self)
+
+		self.setFocusPolicy(Qt.ClickFocus)
+
 		self.rospkg_path = rospkg.RosPack()
 		self.map_view_package_path = self.rospkg_path.get_path('map_view')
 
@@ -108,6 +112,64 @@ class Window(QMainWindow):
 		self.Total_Steps_Label = self.findChild(QLabel, 'Total_Steps_Label')
 
 		self.scale_widgets()
+		# oskb phoney-us phoney-de --width 480 --center --start minimized
+		self.osk_command = ["oskb", "phoney-us", "phoney-de", "--width", "480", "--center", "--start", "minimized"]
+		self.osk_process = QProcess(self)  # Parent to the window
+		self.line_edits = [] # List to store all QLineEdit widgets
+
+		# After UI setup, add the line edits to the list
+		self.find_line_edits() # Call this after UI is loaded
+
+		for line_edit in self.line_edits:
+			line_edit.focusInEvent = lambda event, le=line_edit: self.line_edit_focus_in(event, le)
+			line_edit.focusOutEvent = lambda event, le=line_edit: self.line_edit_focus_out(event, le)
+		# Connect QProcess signals
+		self.osk_process.started.connect(self.osk_started)
+		self.osk_process.finished.connect(self.osk_finished)
+		self.osk_process.errorOccurred.connect(self.osk_error)  # Handle errors
+
+	def find_line_edits(self):
+		for widget in self.findChildren(QLineEdit):
+			self.line_edits.append(widget)
+			print(f"Found Line Edit: {widget.objectName()}")
+			
+	def line_edit_focus_in(self, event, line_edit):
+		QLineEdit.focusInEvent(line_edit, event)
+		self.start_osk()
+	
+	def line_edit_focus_out(self, event, line_edit):
+		QLineEdit.focusOutEvent(line_edit, event)
+		self.stop_osk()
+		
+	def start_osk(self):
+		if self.osk_process.state() == QProcess.NotRunning:  # Check if already running
+			self.osk_process.start(self.osk_command[0], self.osk_command[1:] if len(self.osk_command) > 1 else []) # Pass command and arguments separately
+			print("OSK starting...")
+			
+	def stop_osk(self):
+		if self.osk_process.state() == QProcess.Running:
+			self.osk_process.terminate()  # Try to terminate gracefully
+			if not self.osk_process.waitForFinished(2000):  # Wait with timeout (2 seconds)
+				self.osk_process.kill()  # Force kill if termination fails
+				print("OSK forcefully stopped")
+			else:
+				print("OSK stopped")
+
+
+	def osk_started(self):
+		print("OSK started successfully.")
+
+	def osk_finished(self, exitCode, exitStatus):
+		print(f"OSK finished with exit code: {exitCode}, status: {exitStatus}")
+		self.osk_process.close()  # Important: close the process after it's finished
+		# self.osk_process = QProcess(self) # If you need to restart it later, recreate the QProcess
+		# or use self.osk_process.reset() if Qt version supports it.
+		# Otherwise you'll get "Process is already running" error
+
+	def osk_error(self, error):
+		print(f"OSK error: {error}")
+		if error == QProcess.FailedToStart:
+			print(f"Error: OSK command '{self.osk_command}' not found or not executable.")
 
 	def scale_widgets(self):
         # Get screen size
@@ -339,7 +401,6 @@ class Window(QMainWindow):
 		self.timer.timeout.connect(self.updateGUI)
 		self.timer.start(1000)
 		
-	
 	def updateGUI(self):
 		# QtGui.QGuiApplication.processEvents()
 		QApplication.processEvents()
