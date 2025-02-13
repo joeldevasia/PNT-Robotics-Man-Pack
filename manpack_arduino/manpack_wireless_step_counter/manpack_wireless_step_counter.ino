@@ -4,11 +4,17 @@
 #include <std_msgs/Int32.h>
 #include <Wire.h>
 
-IPAddress ip(192, 168, 178, 47);
-IPAddress server(192, 168, 0, 171);
+// IPAddress ip(192, 168, 178, 47);
+// IPAddress server(192, 168, 67, 11);
+IPAddress ip(192, 168, 67, 47);
+IPAddress server(192, 168, 67, 11);
+
 uint16_t serverPort = 11411;
-const char *ssid = "TP-Link_Guest_466B";
-const char *password = "Pnt@107#";
+// const char *ssid = "TP-Link_Guest_466B";
+// const char *password = "Pnt@107#";
+
+const char *ssid = "Test";
+const char *password = "12345678";
 
 ros::NodeHandle nh;
 std_msgs::Int32 steps;
@@ -36,13 +42,14 @@ void setup() {
 
 void loop() {
   if (nh.connected()) {
-    readSensorData();
     steps_pub.publish(&steps);
-    nh.spinOnce();
+    Serial.println("Connected");
   } else {
     Serial.println("Not Connected");
   }
-  delay(500);
+  readSensorData();
+  nh.spinOnce();
+  delay(100);
 }
 
 void readSensorData() {
@@ -51,6 +58,7 @@ void readSensorData() {
 
 void getStepCount() {
   steps.data = bma456.getStepCounterOutput();
+  Serial.println(steps.data);
 }
 
 

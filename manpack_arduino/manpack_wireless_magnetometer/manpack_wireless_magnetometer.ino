@@ -4,11 +4,17 @@
 #include <std_msgs/Int32.h>
 #include <Wire.h>
 
-IPAddress ip(192, 168, 178, 47);
-IPAddress server(192, 168, 0, 171);
+// IPAddress ip(192, 168, 178, 47);
+// IPAddress server(192, 168, 67, 11);
+IPAddress ip(192, 168, 67, 47);
+IPAddress server(192, 168, 67, 11);
+
 uint16_t serverPort = 11411;
-const char *ssid = "TP-Link_Guest_466B";
-const char *password = "Pnt@107#";
+// const char *ssid = "TP-Link_Guest_466B";
+// const char *password = "Pnt@107#";
+
+const char *ssid = "Test";
+const char *password = "12345678";
 
 ros::NodeHandle nh;
 std_msgs::Int32 magnetic_heading;
@@ -39,11 +45,9 @@ Adafruit_MLX90393 mlx = Adafruit_MLX90393();
 void setupWiFi();
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(57600);
   Serial.println("Magnetometer ESP");
   setupWiFi();
-
-  Serial.begin(57600);
   if (!mlx.begin_I2C()) {  // hardware I2C mode, can pass in address & alt Wire
     while (1) { delay(10); }
   }
@@ -73,14 +77,14 @@ void setup() {
 
 void loop() {
   if (nh.connected()) {
-    readSensorData();
     magnetometer_pub.publish(&magnetic_heading);
-    nh.spinOnce();
     Serial.println("Connected");
   } else {
     Serial.println("Not Connected");
   }
-  delay(500);
+  readSensorData();
+  nh.spinOnce();
+  delay(100);
 }
 
 void readSensorData() {
@@ -123,6 +127,7 @@ void getMagnetometerData() {
 
     magnetic_heading.data = heading;
   }
+  Serial.println(magnetic_heading.data);
 }
 
 
